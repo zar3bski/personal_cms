@@ -1,0 +1,3 @@
+.env
+.env.db
+cms_src/staticfiles/
