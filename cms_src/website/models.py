@@ -1,8 +1,9 @@
 from django.db import models
 from django.core.cache import cache
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, int_list_validator
 from datetime import datetime
+from mptt.models import MPTTModel, TreeForeignKey
 
 '''Tweaks and tricks'''
 def get_name(self):
@@ -41,23 +42,43 @@ class SiteSetting(SingletonModel):
     owner_last_name  = models.CharField(max_length=100,default='my_last_name')
 
 '''                               categorical models'''
+'''
+class Category(MPTTModel): 
+    name   = models.CharField(max_length=50, unique=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+        verbose_name_plural = "categories"
+
+    @classmethod
+    def load(cls):
+        pass
+'''
 class Category(models.Model):
     parent        = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_category', on_delete=models.CASCADE)
     name          = models.CharField(max_length=50, unique=True)
-    nesting_level = models.IntegerField(default = 0, validators = [MaxValueValidator(3)], help_text="Leave it how it is. The app takes care of everything")
+    nesting_level = models.IntegerField(default = 0, editable=False)
     slug          = models.SlugField(max_length=60, allow_unicode=True)
+    cluster       = models.CharField(default = "", max_length=20, editable=False)
+    path          = models.CharField(default = "", max_length=50, editable=False)
 
-    def __init__(self, *args, **kwargs): 
-        super(Category, self).__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
         if self.parent != None:
             self.nesting_level = self.parent.nesting_level + 1
+            self.parent.cluster = "{},{}".format(self.parent.cluster,self.id)
         elif self.parent == None:
             self.nesting_level = 0
+        self.path = str(self)
+        print("mon id: {}({}), mon cluster: {}({})".format(self.id, type(self.id), self.cluster, type(self.cluster)))
+        super(Category, self).save(*args, **kwargs)
+    
 
     class Meta:
         unique_together = ('slug', 'parent',) 
         verbose_name_plural = "categories"       
-
+    
     def __str__(self):                           
         full_path = [self.name.lower()]                                        
         k = self.parent                          
@@ -67,15 +88,16 @@ class Category(models.Model):
             k = k.parent
 
         return '->'.join(full_path[::-1])
-
+    
     # TODO mettre en cache
+    
     @classmethod
     def load(cls):
         _categories = cls.objects.all()
-        nav_tree = [{"name":x.name, "slug":x.slug, "id":x.id, "path":str(x), "children": [{"name":y.name, "slug":y.slug, "id":y.id, "path":str(y)} for y in _categories if y.parent==x]} for x in _categories if x.nesting_level == 0]
+        nav_tree = [{"name":x.name,"id":x.id,"path":str(x), "children": [{"name":y.name, "id":y.id, "path":str(y)} for y in _categories if y.parent==x]} for x in _categories if x.parent == None]
         
         return nav_tree
-
+ 
 '''                               editorial models'''
 class Publication(models.Model):
     date    = models.DateField('date published')
@@ -86,21 +108,22 @@ class Publication(models.Model):
 
 class Article(models.Model):
     first_written = models.DateField(auto_now_add=True)
-    last_udate    = models.DateField('date published')
+    last_update   = models.DateField('date published')
     tags          = models.CharField(max_length=100, help_text="comma separated tags")
     title         = models.CharField(max_length=100)
     visible       = models.BooleanField(default=True)
     content       = models.TextField()
     category      = models.ForeignKey(Category, default="Misc", on_delete=models.SET_DEFAULT)
-    language      = models.CharField(max_length=1 ,choices=[("fr","French"),("en", "English"),("es", "Spanish")], default="en")
-    #rating        = models.PositiveSmallIntegerField()
+    language      = models.CharField(max_length=2 ,choices=[("fr","French"),("en", "English"),("es", "Spanish")], default="en")
+    rating        = models.PositiveSmallIntegerField(default= 0, editable=False)
     author        = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
 
     def __str__(self):
         return self.title
     # TODO order by rating 
     class Meta:
-        ordering = ('last_udate',)
+        ordering = ('last_update','rating')
 
 '''                               temporal models'''
 class Timeline(models.Model): 

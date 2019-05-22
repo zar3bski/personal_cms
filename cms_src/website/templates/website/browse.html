@@ -9,7 +9,7 @@
 <h2 class="s-title">
 	<ul class="breadcrumb">
 		<li class="breadcrumb-item">
-			browse:~
+			by@{{order_mode}}:~
 		</li>
 		{% for p in path %}
 			<li class="breadcrumb-item">
@@ -20,12 +20,36 @@
 	</ul>
 </h2>
 
+<ul class="pagination">
+  <li class="page-item disabled">
+    <a href="#" tabindex="-1">Previous</a>
+  </li>
+  <li class="page-item active">
+    <a href="#">{{page}}</a>
+  </li>
+  <li class="page-item">
+    <a href="#">{{page+1}}</a>
+  </li>
+  <li class="page-item">
+    <a href="#">{{page+2}}</a>
+  </li>
+  <li class="page-item">
+    <span>...</span>
+  </li>
+  <li class="page-item">
+    <a href="#">12</a>
+  </li>
+  <li class="page-item">
+    <a href="#">Next</a>
+  </li>
+</ul>
+
 {% for a in articles %}
 	<div class="card">
 		<div class="card-header">
 			<div class="card-title h5">{{a.title}}</div>
 			<div class="card-subtitle text-gray">{{a.category}}</div>
-			<div class="bg-dark">{{a.language}}</div>
+			<div class="bg-dark">{{a.language}}    last upd: {{a.last_update}}</div>
 		</div>
 
 		<div class="card-body">
@@ -38,9 +62,7 @@
 			{% endfor %}
 
 		</div>
-
-	</div>
+	</div>	
 {% endfor %}
-
 
 {% endblock %}

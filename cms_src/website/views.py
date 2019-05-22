@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .models import SiteSetting, Diplome, Certification, Article, Category
 from django.contrib import admin
 
-categories = Category.load()
+#categories = Category.load()
 
 class Home(View):
     template = loader.get_template("website/home.html")
@@ -20,22 +20,19 @@ class Home(View):
 
 class Browse(View):
     template = loader.get_template("website/browse.html")
-    def get(self, request, category, order_mode="time" , page=1):
-        print(category)
-        print(categories)
+    def get(self, request, category, order_mode, page):
+        order_mode = order_mode or "last_update"
+        page = int(page or 1)
 
-        #TODO extraite l'id correspondant à la category pour trouver toutes les catégories filles afin de filtrer les articles
-        print(categories["path"==category])
-        print(categories["path"==category]["id"])
-        #print(entry.__dict__)
-        path = category.split('->')
-        #articles = Article.objects.filter(category=entry)
-        articles = Article.objects.all()
+        path     = category.split('->')
+        cat      = Category.objects.filter(path__startswith=category).values_list('id', flat=True)
+        articles = Article.objects.filter(category__in=cat).order_by("-"+order_mode)[(page-1)*5:(page-1)*5+5]
+
         for a in articles: 
             a.tags    = a.tags.split(',')
             a.content = a.content[0:400]
 
-        context  = {"path": path, "articles": articles}
+        context  = {"path": path, "articles": articles, "page": page, "order_mode": order_mode}
         return HttpResponse(self.template.render(context, request))
 
 class Education(View):
