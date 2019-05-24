@@ -11,7 +11,7 @@
 		<li class="breadcrumb-item">
 			by@{{order_mode}}:~
 		</li>
-		{% for p in path %}
+		{% for p in breadcrumb %}
 			<li class="breadcrumb-item">
 				{{p}}
 			</li>
@@ -20,49 +20,50 @@
 	</ul>
 </h2>
 
-<ul class="pagination">
-  <li class="page-item disabled">
-    <a href="#" tabindex="-1">Previous</a>
-  </li>
-  <li class="page-item active">
-    <a href="#">{{page}}</a>
-  </li>
-  <li class="page-item">
-    <a href="#">{{page+1}}</a>
-  </li>
-  <li class="page-item">
-    <a href="#">{{page+2}}</a>
-  </li>
-  <li class="page-item">
-    <span>...</span>
-  </li>
-  <li class="page-item">
-    <a href="#">12</a>
-  </li>
-  <li class="page-item">
-    <a href="#">Next</a>
-  </li>
-</ul>
+<div class="columns">
+	<div class="column col-md-12">	
+		{% for a in articles %}
+			<div class="card">
+				<div class="card-header">
+					<div class="card-title h5">{{a.title}}</div>		
+					<div class="text-right"> last update: {{a.last_update}}</div>		
+				</div>
 
-{% for a in articles %}
-	<div class="card">
-		<div class="card-header">
-			<div class="card-title h5">{{a.title}}</div>
-			<div class="card-subtitle text-gray">{{a.category}}</div>
-			<div class="bg-dark">{{a.language}}    last upd: {{a.last_update}}</div>
-		</div>
+				<div class="card-body">
+					{{a.content | markdown | safe}}
+				</div>
 
-		<div class="card-body">
-			{{a.content | markdown | safe}}
-		</div>
+				<div class="card-footer">
+					{% for t in a.tags %}
+						<span class="chip">{{t}}</span>
+					{% endfor %}
+					{{a.language}}
+					{{a.rating}}
 
-		<div class="card-footer">
-			{% for t in a.tags %}
-				<span class="chip">{{t}}</span>
-			{% endfor %}
+				</div>
+			</div>	
+		{% endfor %}
+	</div>
+	
+	<div class="column col-3">
 
-		</div>
-	</div>	
-{% endfor %}
+		<form action="/browse/" id="browse" method="get">	
+			<button name="page" value="{{page|add:"-1"}}" class="btn btn-action">
+				<i class="icon icon-arrow-left"></i>
+			</button>	
+				
+			<button  name="page" value="{{page}}" class="btn btn-action">
+				<i class="icon icon-refresh"></i>
+			</button>	
+				
+			<button name="page" value="{{page|add:"1"}}" class="btn btn-action">
+				<i class="icon icon-arrow-right"></i>
+			</button>
+
+			<br>
+            
+            {{ nav_form }}  		
+	</div>
+</div>
 
 {% endblock %}

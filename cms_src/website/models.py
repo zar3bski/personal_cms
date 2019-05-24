@@ -42,19 +42,6 @@ class SiteSetting(SingletonModel):
     owner_last_name  = models.CharField(max_length=100,default='my_last_name')
 
 '''                               categorical models'''
-'''
-class Category(MPTTModel): 
-    name   = models.CharField(max_length=50, unique=True)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-
-    class MPTTMeta:
-        order_insertion_by = ['name']
-        verbose_name_plural = "categories"
-
-    @classmethod
-    def load(cls):
-        pass
-'''
 class Category(models.Model):
     parent        = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_category', on_delete=models.CASCADE)
     name          = models.CharField(max_length=50, unique=True)
@@ -94,7 +81,7 @@ class Category(models.Model):
     @classmethod
     def load(cls):
         _categories = cls.objects.all()
-        nav_tree = [{"name":x.name,"id":x.id,"path":str(x), "children": [{"name":y.name, "id":y.id, "path":str(y)} for y in _categories if y.parent==x]} for x in _categories if x.parent == None]
+        nav_tree = [{"name":x.name,"id":x.id,"id":x.id, "children": [{"name":y.name, "id":y.id, "id":y.id} for y in _categories if y.parent==x]} for x in _categories if x.parent == None]
         
         return nav_tree
  
@@ -121,7 +108,6 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-    # TODO order by rating 
     class Meta:
         ordering = ('last_update','rating')
 

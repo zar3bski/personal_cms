@@ -1,10 +1,19 @@
-'''from django import forms
+from django import forms
+from .models import Category
 
-class EducationForm(forms.Form):
-	edu_type    = forms.ChoiceField(choices=[("diplom", "diplom"), ("certification", "certification")])
-	title 		= forms.CharField(label='diploma / cert title', max_length=100)
-	institution = forms.CharField(label='institution', max_length=100)
-	link        = forms.URLField(label='institution link', required=False)
-	year        = forms.IntegerField(label='year obtained')
-	details     = forms.CharField(label='details', widget=forms.Textarea, required=False)'''
+class BrowseForm(forms.Form):
+	class Meta: 
+		model = Category
+
+	def __init__(self, init_cat=1, init_order="last_update", *args, **kwargs): 
+		super(BrowseForm, self).__init__(*args, **kwargs)
+		self.fields["category"]   = forms.ModelChoiceField(
+			queryset=Category.objects.all(),
+			initial=init_cat,
+			label="")
+		self.fields["order_mode"] = forms.ChoiceField(
+			widget=forms.RadioSelect,
+			choices=[("last_update", "by last update"), ("rating", "by rate")],
+			initial=init_order,
+			label="")
 		
