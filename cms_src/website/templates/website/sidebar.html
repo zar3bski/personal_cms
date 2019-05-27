@@ -6,11 +6,18 @@
     <label class="accordion-header c-hand" for="about-me">About me</label>
     <div class="accordion-body">
       <ul class="menu menu-nav">
-        <li class="menu-item"><a href="/education">Education</a>
-        </li>
-        <li class="menu-item"><a href="getting-started/custom.html">Publication</a>
-        </li>
-        <li class="menu-item"><a href="getting-started/browsers.html">Projects</a>
+        {% if settings.show_education == True %}
+          <li class="menu-item"><a href="/education">Education</a></li>
+        {% endif %}
+        {% if settings.show_publications == True %}
+          <li class="menu-item"><a href="getting-started/custom.html">Publication</a></li>
+        {% endif %}
+        {% if settings.show_projects == True %}
+          <li class="menu-item"><a href="getting-started/browsers.html">Projects</a>
+        {% endif %}
+        {% if settings.show_jobs == True %}
+          <li class="menu-item"><a href="getting-started/browsers.html">Jobs</a>
+        {% endif %}
         </li>
       </ul>
     </div>

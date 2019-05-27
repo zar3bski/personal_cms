@@ -26,14 +26,35 @@
 			<div class="card">
 				<div class="card-header">
 					<div class="card-title h5">{{a.title}}</div>
-					<div class="text-right"> last update: {{a.last_update}}</div>
+					<div class="text-right">  
+							{% if a.language == "en" %}
+								last update:
+							{% endif %}
+							{% if a.language == "fr" %}
+								dernière mise à jour:
+							{% endif %}
+							{% if a.language == "es" %}
+								actualización
+							{% endif %}
+						{{a.last_update}}
+					</div>
 					<div class="card-subtitle text-gray">{{a.category}}</div>		
 				</div>
 
 				<div class="card-body">
 					{{a.content | markdown | safe}} 
 					<div class="text-right">
-						<a href="read/{{a.category}}/{{a.id}}">continue reading</a>
+						<a href="/read/{{a.category}}/{{a.id}}" lang="{{a.language}}" hreflang="{{a.language}}">
+							{% if a.language == "en" %}
+								continue reading
+							{% endif %}
+							{% if a.language == "fr" %}
+								lire la suite
+							{% endif %}
+							{% if a.language == "es" %}
+								leer más
+							{% endif %}
+						</a>
 					</div>
 				</div>
 
@@ -41,9 +62,11 @@
 					{% for t in a.tags %}
 						<span class="chip">{{t}}</span>
 					{% endfor %}
-					{{a.language}}
-					{{a.rating}}
-
+					
+					{% load static %}
+					<img src="{% static 'website/img/globe.png' %}" height="16">{{a.language}}
+					<img src="{% static 'website/img/thumb.png' %}" height="16">{{a.rating}}
+					
 				</div>
 			</div>	
 		{% endfor %}

@@ -3,7 +3,6 @@ from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator, int_list_validator
 from datetime import datetime
-from mptt.models import MPTTModel, TreeForeignKey
 
 '''Tweaks and tricks'''
 def get_name(self):
@@ -36,20 +35,26 @@ class SingletonModel(models.Model):
 
 '''                               MODELS'''
 class SiteSetting(SingletonModel):
-    title            = models.CharField(max_length=100,default='my_site_title')
-    about            = models.TextField()
-    owner_first_name = models.CharField(max_length=100,default='my_first_name')
-    owner_last_name  = models.CharField(max_length=100,default='my_last_name')
+    title             = models.CharField(max_length=100,default='my_site_title')
+    about             = models.TextField(null=True, blank=True)
+    owner_first_name  = models.CharField(max_length=100,default='my_first_name')
+    owner_last_name   = models.CharField(max_length=100,default='my_last_name')
+    footer            = models.CharField(max_length=200,null=True, blank=True, help_text="markdown syntax")
+    show_galery       = models.BooleanField(default=True)
+    show_articles     = models.BooleanField(default=True)
+    show_projects     = models.BooleanField(default=True)
+    show_education    = models.BooleanField(default=True)
+    show_publications = models.BooleanField(default=True)
+    show_jobs         = models.BooleanField(default=True)
 
 '''                               categorical models'''
 class Category(models.Model):
     parent        = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_category', on_delete=models.CASCADE)
     name          = models.CharField(max_length=50, unique=True)
     nesting_level = models.IntegerField(default = 0, editable=False)
-    slug          = models.SlugField(max_length=60, allow_unicode=True)
+    content_type  = models.CharField(max_length=2 ,choices=[("articles","Articles"),("photo", "Photos")], default="articles")
     cluster       = models.CharField(default = "", max_length=20, editable=False)
     path          = models.CharField(default = "", max_length=50, editable=False)
-
 
     def save(self, *args, **kwargs):
         if self.parent != None:
@@ -58,12 +63,9 @@ class Category(models.Model):
         elif self.parent == None:
             self.nesting_level = 0
         self.path = str(self)
-        print("mon id: {}({}), mon cluster: {}({})".format(self.id, type(self.id), self.cluster, type(self.cluster)))
         super(Category, self).save(*args, **kwargs)
     
-
-    class Meta:
-        unique_together = ('slug', 'parent',) 
+    class Meta: 
         verbose_name_plural = "categories"       
     
     def __str__(self):                           
@@ -77,15 +79,19 @@ class Category(models.Model):
         return '->'.join(full_path[::-1])
     
     # TODO mettre en cache
-    
     @classmethod
     def load(cls):
         _categories = cls.objects.all()
-        nav_tree = [{"name":x.name,"id":x.id,"id":x.id, "children": [{"name":y.name, "id":y.id, "id":y.id} for y in _categories if y.parent==x]} for x in _categories if x.parent == None]
+        nav_tree = [{"name":x.name,"id":x.id, "children": [{"name":y.name, "id":y.id} for y in _categories if y.parent==x]} for x in _categories if x.parent == None]
         
         return nav_tree
  
 '''                               editorial models'''
+class Prodution(models.Model): 
+    class Meta:
+        abstract = True
+    title = models.CharField(max_length=100)
+
 class Publication(models.Model):
     date    = models.DateField('date published')
     typeof  = models.CharField(max_length=20)
@@ -105,11 +111,21 @@ class Article(models.Model):
     rating        = models.PositiveSmallIntegerField(default= 0, editable=False)
     author        = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
-
     def __str__(self):
         return self.title
     class Meta:
         ordering = ('last_update','rating')
+
+class Comment(models.Model):
+    parent  = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_category', on_delete=models.CASCADE)
+    date    = models.DateField(auto_now_add=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    content = models.TextField(max_length=300, help_text="markdown syntax")
+    author  = models.CharField(max_length=100)
+    rating  = models.PositiveSmallIntegerField(default= 0, editable=False)
+
+    def __str__(self):
+        return "{}-{}-{}".format(self.author, self.date, self.content[:20])
 
 '''                               temporal models'''
 class Timeline(models.Model): 
@@ -142,8 +158,7 @@ class Job(models.Model):
     compagny     = models.CharField(max_length=100)
     compagny_url = models.URLField(null=True)
     decription   = models.TextField(null=True)
-
-        
+     
 class Project(models.Model):
     name        = models.CharField(max_length=100)
     url         = models.URLField()

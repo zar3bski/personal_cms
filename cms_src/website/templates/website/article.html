@@ -1,0 +1,56 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Home--{{settings.title}}{% endblock %}
+
+{% block content %}
+{% load markdown_extras %}
+
+<h2>{{article.title}}</h2>
+{{article.content | markdown | safe}}
+
+<div class="divider text-center" data-content="COMMENTS"></div>
+<div class="columns">
+	<div class="column col-sm-12">
+		<div class="panel">
+
+			<div class="panel-nav">
+    			<!-- navigation components: tabs, breadcrumbs or pagination -->
+  			</div>
+
+			<div class="panel-body">
+				{% for c in comments %}
+				
+					<figure class="avatar badge" data-initial="{{c.author|make_list|first}}" style="background-color: #5755d9;">
+					</figure>
+				
+					<b>{{c.author}}</b>
+					<i>{{c.date}}</i>
+					<div class="float-right">
+						<button id="btn_comment_{{c.id}}" class="btn tooltip tooltip-left" data-tooltip="Answer to {{c.author}}" onclick="changeField('id_parent',{{c.id}},btn_uncomment_{{c.id}},btn_comment_{{c.id}})" >
+							<i class="icon icon-message"></i>
+						</button>
+						
+						<button id="btn_uncomment_{{c.id}}" class="btn btn-primary tooltip tooltip-left" data-tooltip="Do not answer to {{c.author}}" onclick="changeField('id_parent','',btn_comment_{{c.id}},btn_uncomment_{{c.id}})" >
+							<i class="icon icon-message"></i>
+						</button>
+					</div>
+					<br>
+				
+					{{ c.content | markdown | safe}}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="column col-sm-12">
+		<form method="post">
+			<div class="form-group">
+				{% csrf_token %}
+	  			{{comment_form}}
+	  			<button class="btn btn-primary">comment</button>
+	  		</div>
+	  	</form>
+	</div>
+
+</div>
+{% endblock %}
