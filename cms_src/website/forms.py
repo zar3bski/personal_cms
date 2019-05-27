@@ -16,4 +16,17 @@ class BrowseForm(forms.Form):
 			choices=[("last_update", "by last update"), ("rating", "by rate")],
 			initial=init_order,
 			label="")
-		
+
+class CommentForm(forms.Form):
+	author  = forms.CharField(
+		label="", 
+		max_length=100, 
+		widget=forms.TextInput(attrs={'placeholder': 'Name', "class":"form-input"}))
+	parent  = forms.IntegerField(
+		label="",
+		required=False, 
+		widget=forms.TextInput(attrs={'placeholder': 'Answer to', "class":"form-input"}))
+	content = forms.CharField(
+		label="", 
+		max_length=1000, 
+		widget=forms.Textarea(attrs={"placeholder": "Your comment\n(you can use markdown syntax)","class":"form-input","row":"2"}))

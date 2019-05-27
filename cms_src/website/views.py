@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.template import loader
 from django.http import HttpResponse
@@ -6,8 +6,8 @@ from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
-from .models import SiteSetting, Diplome, Certification, Article, Category
-from .forms import BrowseForm
+from .models import SiteSetting, Diplome, Certification, Article, Category, Comment
+from .forms import BrowseForm, CommentForm
 from django.contrib import admin
 
 class Home(View):
@@ -24,9 +24,9 @@ class Browse(View):
         q_args = {q.split("=")[0]:q.split("=")[1] for q in request.GET.urlencode().split("&")}
 
         order_mode = q_args.get("order_mode", "last_update")
-        page = int(q_args.get("page", "1"))
-        root = Category.objects.get(id=q_args["category"])
-        nav_form = BrowseForm(root.id, order_mode)     
+        page       = int(q_args.get("page", "1"))
+        root       = Category.objects.get(id=q_args["category"])
+        nav_form   = BrowseForm(root.id, order_mode)     
         breadcrumb = root.path.split('->')
 
         cat      = Category.objects.filter(path__startswith=root.path).values_list('id', flat=True)
@@ -39,6 +39,27 @@ class Browse(View):
         context  = {"breadcrumb": breadcrumb, "articles": articles, "page": page, "order_mode": order_mode, 
         "nav_form": nav_form}
         return HttpResponse(self.template.render(context, request))
+
+class Reader(View):
+    template = loader.get_template("website/article.html")
+    comment_form = CommentForm
+
+    def get(self, request, path, article_id): 
+        article      = Article.objects.get(id=article_id)
+        comments     = Comment.objects.filter(article_id=article_id)
+        context      ={"article":article, "comment_form":self.comment_form, "comments":comments}
+        return HttpResponse(self.template.render(context, request))
+
+    def post(self, request, path, article_id): 
+        comment = self.comment_form(request.POST)
+        if comment.is_valid(): 
+            comment.clean()
+            c = Comment.objects.create(
+                author     = comment["author"].value(), 
+                content    = comment["content"].value(),
+                article_id = article_id)
+            c.save()
+            return redirect(request.META['HTTP_REFERER'])
 
 class Education(View):
     template = loader.get_template("website/education.html")
