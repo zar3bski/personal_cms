@@ -1,0 +1,17 @@
+{% load markdown_extras %}
+
+<div class="docs-footer container grid-lg" id="footer">
+
+	<div class="bg-secondary">
+		<p>
+			<div class="p-centered">
+		{% if settings.footer is not None %}
+    	    {{ settings.footer | markdown | safe }}
+    	{% endif %}
+		
+		
+    		Designed with <a href="https://github.com/ZarebskiDavid/personal_cms">personal CMS</a>	
+    		</div>
+    	</p>
+    </div>
+</div>
