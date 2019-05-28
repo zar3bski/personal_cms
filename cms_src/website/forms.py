@@ -25,7 +25,7 @@ class CommentForm(forms.Form):
 	parent  = forms.IntegerField(
 		label="",
 		required=False, 
-		widget=forms.TextInput(attrs={'placeholder': 'Answer to', "class":"form-input"}))
+		widget=forms.HiddenInput(attrs={'placeholder': 'Answer to', "class":"form-input", "autocomplete":"off"}))
 	content = forms.CharField(
 		label="", 
 		max_length=1000, 

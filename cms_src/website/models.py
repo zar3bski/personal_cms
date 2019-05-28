@@ -95,6 +95,9 @@ class Person(models.Model):
     def __str__(self):
         return "{} {} {}".format(self.first_name, self.last_name or "", self.town or "")
 
+    class Meta:
+        ordering = ['first_name']
+
 class Post(models.Model): 
     class Meta:
         abstract        = True
@@ -140,6 +143,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return "{}-{}-{}".format(self.author, self.date, self.content[:20])
+
+    def __repr__(self): 
+        return self
 
 class Publication(models.Model):
     date    = models.DateField('date published')

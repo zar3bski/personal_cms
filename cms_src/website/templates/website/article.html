@@ -19,30 +19,47 @@
 
 			<div class="panel-body">
 				{% for c in comments %}
-				
-					<figure class="avatar badge" data-initial="{{c.author|make_list|first}}" style="background-color: #5755d9;">
-					</figure>
-				
-					<b>{{c.author}}</b>
-					<i>{{c.date}}</i>
-					<div class="float-right">
-						<button id="btn_comment_{{c.id}}" class="btn tooltip tooltip-left" data-tooltip="Answer to {{c.author}}" onclick="changeField('id_parent',{{c.id}},btn_uncomment_{{c.id}},btn_comment_{{c.id}})" >
-							<i class="icon icon-message"></i>
-						</button>
+					{% if c.parent is null %}
+						<figure class="avatar avatar-sm" data-initial="{{c.author|make_list|first}}" style="background-color: #5755d9;">
+						</figure>
+					
+						<b>{{c.author}}</b>
+						<i>{{c.date}}</i>
+						<div class="float-right">
+							<button id="btn_comment_{{c.id}}" class="btn tooltip tooltip-left" data-tooltip="Answer to {{c.author}}" onclick="changeField('id_parent',{{c.id}},'answer_to','block', 'answer_name', '{{c.author}}')" >
+								<i class="icon icon-message"></i>
+							</button>
+							
+						</div>
 						
-						<button id="btn_uncomment_{{c.id}}" class="btn btn-primary tooltip tooltip-left" data-tooltip="Do not answer to {{c.author}}" onclick="changeField('id_parent','',btn_comment_{{c.id}},btn_uncomment_{{c.id}})" >
-							<i class="icon icon-message"></i>
-						</button>
-					</div>
-					<br>
-				
-					{{ c.content | markdown | safe}}
+						{{ c.content | markdown | safe}}
+						<!--TODO find a smarter to iterate: https://stackoverflow.com/questions/12014704/iterating-over-related-objects-in-django-loop-over-query-set-or-use-one-liner-s-->
+						{% for s in comments %}
+							{% if s.parent == c %}
+								<div class="float-right">
+									<b>{{s.author}}</b>
+									<figure class="avatar avatar-xs" data-initial="{{s.author|make_list|first}}" style="background-color: #5755d9;">
+									</figure>
+								</div>
+								<div class="float-right">
+									{{s.content}}
+								</div>
+								<br>
+								
+							{% endif %}
+						{% endfor %}
+						<br>
+					{% endif %}
 				{% endfor %}
 			</div>
 		</div>
 	</div>
 
 	<div class="column col-sm-12">
+		<div id="answer_to" class="toast" style="display: none;">
+			<button class="btn btn-clear float-right" onclick="changeField('id_parent',null,'answer_to','none', 'answer_name', '')"></button>
+  			You are answering to <span id="answer_name"></span>
+		</div>
 		<form method="post">
 			<div class="form-group">
 				{% csrf_token %}

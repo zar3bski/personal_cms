@@ -47,17 +47,23 @@ class Reader(View):
     def get(self, request, path, article_id): 
         article      = Article.objects.get(id=article_id)
         comments     = Comment.objects.filter(article_id=article_id)
-        context      ={"article":article, "comment_form":self.comment_form, "comments":comments}
+        context      = {"article":article, "comment_form":self.comment_form, "comments":comments}
         return HttpResponse(self.template.render(context, request))
 
     def post(self, request, path, article_id): 
         comment = self.comment_form(request.POST)
         if comment.is_valid(): 
             comment.clean()
+            try:
+                parent = Comment.objects.get(id=comment["parent"].value())
+            except ValueError:
+                parent = None
+
             c = Comment.objects.create(
                 author     = comment["author"].value(), 
                 content    = comment["content"].value(),
-                article_id = article_id)
+                article_id = article_id, 
+                parent     = parent)
             c.save()
             return redirect(request.META['HTTP_REFERER'])
 

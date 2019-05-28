@@ -5,8 +5,8 @@ function showhide() {
     }
   }
 
-function changeField(field_name,value,display_element,hide_element) {
-	document.getElementById(field_name).value              = value;
-	document.getElementById(display_element).style.display = "block";
-	document.getElementById(hide_element).hidden           = 'True';
+function changeField(field_name,value,element,display,name_div,name) {
+	document.getElementById(field_name).value      = value;
+	document.getElementById(element).style.display = display;
+	document.getElementById(name_div).innerHTML    = name;
 }
