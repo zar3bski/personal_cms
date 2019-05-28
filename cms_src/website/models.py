@@ -52,8 +52,7 @@ class Category(models.Model):
     parent        = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_category', on_delete=models.CASCADE)
     name          = models.CharField(max_length=50, unique=True)
     nesting_level = models.IntegerField(default = 0, editable=False)
-    content_type  = models.CharField(max_length=2 ,choices=[("articles","Articles"),("photo", "Photos")], default="articles")
-    cluster       = models.CharField(default = "", max_length=20, editable=False)
+    content_type  = models.CharField(max_length=8 ,choices=[("articles","Articles"),("photo", "Photos")], default="articles")
     path          = models.CharField(default = "", max_length=50, editable=False)
 
     def save(self, *args, **kwargs):
@@ -87,10 +86,60 @@ class Category(models.Model):
         return nav_tree
  
 '''                               editorial models'''
-class Prodution(models.Model): 
+class Person(models.Model): 
+    first_name = models.CharField(max_length=50, help_text="first name OR pseudo")
+    last_name  = models.CharField(max_length=50, null=True, blank=True)
+    url        = models.URLField(max_length=200, null=True, blank=True)
+    town       = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return "{} {} {}".format(self.first_name, self.last_name or "", self.town or "")
+
+class Post(models.Model): 
     class Meta:
-        abstract = True
-    title = models.CharField(max_length=100)
+        abstract        = True
+        indexes         = [
+            models.Index(fields=['category', 'nb_views', 'rating'])
+        ]
+        unique_together = [['title', 'author']]
+
+    title           = models.CharField(max_length=100)
+    author          = models.ForeignKey(Person, default=0, on_delete=models.SET_DEFAULT)
+    rating          = models.PositiveSmallIntegerField(default=0, editable=False)
+    nb_views        = models.PositiveIntegerField(default=0, editable=False)
+    category        = models.ForeignKey(Category, default=0, on_delete=models.SET_DEFAULT)
+    tags            = models.CharField(max_length=100, help_text="comma separated tags")
+    adult_only      = models.BooleanField(default=False)
+    description     = models.TextField(max_length=300, help_text="markdown syntax", null=True, blank=True)
+    first_published = models.DateField(auto_now_add=True)
+
+class Article(Post):
+    last_update     = models.DateField('date published')
+    visible         = models.BooleanField(default=True)
+    content         = models.TextField()
+    language        = models.CharField(max_length=2 ,choices=[("fr","French"),("en", "English"),("es", "Spanish")], default="en")
+
+    def __str__(self):
+        return self.title
+
+class Photo(Post):
+    photo_models = models.ManyToManyField(Person, related_name="models", blank=True)
+    place_name   = models.CharField(max_length=100, null=True, blank=True)
+    buy_link     = models.URLField(max_length=200, null=True, blank=True)
+
+    def __str__(self): 
+        return "{} {} {}".format(self.author, self.place_name or "",self.id)
+
+class Comment(models.Model):
+    parent  = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_comment', on_delete=models.CASCADE)
+    date    = models.DateField(auto_now_add=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    content = models.TextField(max_length=300, help_text="markdown syntax")
+    author  = models.CharField(max_length=100)
+    rating  = models.PositiveSmallIntegerField(default=0, editable=False)
+
+    def __str__(self):
+        return "{}-{}-{}".format(self.author, self.date, self.content[:20])
 
 class Publication(models.Model):
     date    = models.DateField('date published')
@@ -98,34 +147,6 @@ class Publication(models.Model):
     journal = models.CharField(max_length=100)
     editor  = models.CharField(max_length=100)
     link    = models.URLField(null=True)
-
-class Article(models.Model):
-    first_written = models.DateField(auto_now_add=True)
-    last_update   = models.DateField('date published')
-    tags          = models.CharField(max_length=100, help_text="comma separated tags")
-    title         = models.CharField(max_length=100)
-    visible       = models.BooleanField(default=True)
-    content       = models.TextField()
-    category      = models.ForeignKey(Category, default="Misc", on_delete=models.SET_DEFAULT)
-    language      = models.CharField(max_length=2 ,choices=[("fr","French"),("en", "English"),("es", "Spanish")], default="en")
-    rating        = models.PositiveSmallIntegerField(default= 0, editable=False)
-    author        = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return self.title
-    class Meta:
-        ordering = ('last_update','rating')
-
-class Comment(models.Model):
-    parent  = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_category', on_delete=models.CASCADE)
-    date    = models.DateField(auto_now_add=True)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    content = models.TextField(max_length=300, help_text="markdown syntax")
-    author  = models.CharField(max_length=100)
-    rating  = models.PositiveSmallIntegerField(default= 0, editable=False)
-
-    def __str__(self):
-        return "{}-{}-{}".format(self.author, self.date, self.content[:20])
 
 '''                               temporal models'''
 class Timeline(models.Model): 
@@ -150,17 +171,11 @@ class Diplome(Timeline):
 class Certification(Timeline):
     expire = models.DateField(null=True, blank=True)
 
-class Job(models.Model):
-    name         = models.CharField(max_length=100)
-    year         = models.DateField('date started')
+class Job(Timeline):
     duration     = models.DurationField()
     job_type     = models.CharField(max_length=100)
-    compagny     = models.CharField(max_length=100)
-    compagny_url = models.URLField(null=True)
-    decription   = models.TextField(null=True)
      
 class Project(models.Model):
     name        = models.CharField(max_length=100)
     url         = models.URLField()
     description = models.TextField()
-
