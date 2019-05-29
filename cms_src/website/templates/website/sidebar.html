@@ -23,23 +23,38 @@
     </div>
   </div>
 
-  <div class="divider text-center" data-content="ARTICLES"></div>
-  {% for c in categories%}
+  {% if settings.show_articles %}
+    <div class="divider text-center" data-content="ARTICLES"></div>
+    {% for c in article_categories%}
+      {% if c.parent is none %}
+        <div class="accordion">
+          <input id={{c.name}} name="docs-accordion-checkbox" checked="checked" type="checkbox" hidden="">
+          <label class="accordion-header c-hand" for={{c.name}}>{{c.name}}</label>    
+          <div class="accordion-body">
+            <ul class="menu menu-nav">
+              {% for s in article_categories %}
+                {% if s.parent_id is c.id %}
+                  <li class="menu-item"><a href="/browse/?category={{s.id}}">{{s.name}}</a></li>
+                {% endif %}
+              {% endfor %}
+              <li class="menu-item"><a href="/browse/?category={{c.id}}">Misc</a></li>
+            </ul>    
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 
-    <div class="accordion">
-      <input id={{c.slug}} name="docs-accordion-checkbox" checked="checked" type="checkbox" hidden="">
-      <label class="accordion-header c-hand" for={{c.slug}}>{{c.name}}</label>
-      
-      <div class="accordion-body">
-        <ul class="menu menu-nav">
-          {% for s in c.children %}
-            <li class="menu-item"><a href="/browse/?category={{s.id}}">{{s.name}}</a></li>
-          {% endfor %}
-          <li class="menu-item"><a href="/browse/?category={{c.id}}">Misc</a></li>
-        </ul>    
-      </div>
-    </div>
-  {% endfor %}
+  {% if settings.show_articles %}
+    <div class="divider text-center" data-content="GALERIES"></div>
+    <ul class="menu menu-nav">
+      {% for c in photo_categories%}
+        {% if c.parent is none %}
+          <li class="menu-item"><a href="/galerie/?category={{c.id}}">{{c.name}}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
 
 </div>
           

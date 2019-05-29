@@ -49,23 +49,28 @@ class SiteSetting(SingletonModel):
 
 '''                               categorical models'''
 class Category(models.Model):
-    parent        = models.ForeignKey('self', default=None, null=True, blank=True, related_name='nested_category', on_delete=models.CASCADE)
-    name          = models.CharField(max_length=50, unique=True)
+    parent        = models.ForeignKey('self', null=True, blank=True, related_name='nested_category', on_delete=models.SET_NULL)
+    name          = models.CharField(max_length=50)
     nesting_level = models.IntegerField(default = 0, editable=False)
-    content_type  = models.CharField(max_length=8 ,choices=[("articles","Articles"),("photo", "Photos")], default="articles")
+    content_type  = models.CharField(max_length=8, choices=[("article","Articles"),("photo", "Photos")], default="articles")
     path          = models.CharField(default = "", max_length=50, editable=False)
 
     def save(self, *args, **kwargs):
         if self.parent != None:
             self.nesting_level = self.parent.nesting_level + 1
-            self.parent.cluster = "{},{}".format(self.parent.cluster,self.id)
         elif self.parent == None:
             self.nesting_level = 0
         self.path = str(self)
         super(Category, self).save(*args, **kwargs)
-    
+        
+    @staticmethod
+    def load():
+        cache.set('article_categories', Category.objects.filter(content_type="article"))
+        cache.set('photo_categories', Category.objects.filter(content_type="photo"))
+
     class Meta: 
-        verbose_name_plural = "categories"       
+        verbose_name_plural = "categories"
+        unique_together = [['name','parent']]       
     
     def __str__(self):                           
         full_path = [self.name.lower()]                                        
@@ -76,14 +81,6 @@ class Category(models.Model):
             k = k.parent
 
         return '->'.join(full_path[::-1])
-    
-    # TODO mettre en cache
-    @classmethod
-    def load(cls):
-        _categories = cls.objects.all()
-        nav_tree = [{"name":x.name,"id":x.id, "children": [{"name":y.name, "id":y.id} for y in _categories if y.parent==x]} for x in _categories if x.parent == None]
-        
-        return nav_tree
  
 '''                               editorial models'''
 class Person(models.Model): 
@@ -110,7 +107,7 @@ class Post(models.Model):
     author          = models.ForeignKey(Person, default=0, on_delete=models.SET_DEFAULT)
     rating          = models.PositiveSmallIntegerField(default=0, editable=False)
     nb_views        = models.PositiveIntegerField(default=0, editable=False)
-    category        = models.ForeignKey(Category, default=0, on_delete=models.SET_DEFAULT)
+    category        = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
     tags            = models.CharField(max_length=100, help_text="comma separated tags")
     adult_only      = models.BooleanField(default=False)
     description     = models.TextField(max_length=300, help_text="markdown syntax", null=True, blank=True)

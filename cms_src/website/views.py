@@ -10,11 +10,13 @@ from django.db.models import F
 from .models import SiteSetting, Diplome, Certification, Article, Category, Comment, Photo
 from .forms import BrowseForm, CommentForm
 from django.contrib import admin
+from django.core.cache import cache
 
 class Home(View):
     template = loader.get_template("website/home.html")
     def get(self, request):
-        print(request)
+        article_categories = cache.get('article_categories')
+        print(article_categories)
         context = {}
         return HttpResponse(self.template.render(context, request))
 

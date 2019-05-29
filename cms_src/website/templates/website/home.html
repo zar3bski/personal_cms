@@ -6,7 +6,9 @@
 
 <h2 class="s-title">
 
-	{{categories}}
+	{% for cat in article_categories %}
+		{{cat.name}}
+	{% endfor %}
 
 </h2>
 
