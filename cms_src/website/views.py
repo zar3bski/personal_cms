@@ -5,8 +5,9 @@ from django.http import HttpResponse
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 
-from .models import SiteSetting, Diplome, Certification, Article, Category, Comment
+from .models import SiteSetting, Diplome, Certification, Article, Category, Comment, Photo
 from .forms import BrowseForm, CommentForm
 from django.contrib import admin
 
@@ -45,8 +46,12 @@ class Reader(View):
     comment_form = CommentForm
 
     def get(self, request, path, article_id): 
-        article      = Article.objects.get(id=article_id)
-        comments     = Comment.objects.filter(article_id=article_id)
+        article          = Article.objects.get(id=article_id)
+        article.nb_views = F('nb_views')+1
+        article.save()
+        article.refresh_from_db()
+
+        comments     = Comment.objects.select_related('article').filter(article_id=article_id)
         context      = {"article":article, "comment_form":self.comment_form, "comments":comments}
         return HttpResponse(self.template.render(context, request))
 
@@ -75,3 +80,13 @@ class Education(View):
         certifications = Certification.objects.all().order_by('-year')
         context        = {"diploma": diploma, "certifications":certifications}
         return HttpResponse(self.template.render(context, request))
+
+def thumb_up(request, con_type, post_id): 
+    form = request.POST
+    print(form["upvote"])
+    if form["upvote"] == "yes":
+        if con_type == "article":
+            Article.objects.filter(id=post_id).update(rating=F('rating')+1)
+        elif con_type == "photo": 
+            Photo.objects.filter(id=post_id).update(rating=F('rating')+1)
+    return redirect(request.META['HTTP_REFERER'])

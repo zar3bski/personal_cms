@@ -1,12 +1,40 @@
 {% extends 'website/base.html' %}
 
-{% block title %}Home--{{settings.title}}{% endblock %}
+{% block title %}{{article.title}}{% endblock %}
 
 {% block content %}
 {% load markdown_extras %}
 
-<h2>{{article.title}}</h2>
-{{article.content | markdown | safe}}
+<div class="flex-centered">
+	<h2>{{article.title}}</h2>
+</div>
+
+<div class="flex-centered">
+	{% load static %}
+	<small>
+		<img src="{% static 'website/img/calendar.png' %}" height="12">{{article.last_update}}
+		&nbsp;
+		<img src="{% static 'website/img/comment.png' %}" height="12">{{comments|length}}
+		&nbsp;
+		<img src="{% static 'website/img/eye.png' %}" height="12">{{article.nb_views}}
+	</small>
+</div>
+
+<br>
+
+<div class="columns">
+	<div class="column col-sm-12">
+		{{article.content | markdown | safe}}
+	</div>
+	<div class="column col-1">
+		<form action="/thumb_up/article/{{article.id}}/" method="post">
+			<button class="btn tooltip tooltip-left btn-action s-circle" data-tooltip="Like this article" type="submit" name="upvote" value="yes">
+				{% csrf_token %}
+				<img src="{% static 'website/img/thumb_big.png' %}" height="24">
+			</button>	
+		</form>
+	</div>
+</div>
 
 <div class="divider text-center" data-content="COMMENTS"></div>
 <div class="columns">
@@ -33,7 +61,7 @@
 						</div>
 						
 						{{ c.content | markdown | safe}}
-						<!--TODO find a smarter to iterate: https://stackoverflow.com/questions/12014704/iterating-over-related-objects-in-django-loop-over-query-set-or-use-one-liner-s-->
+						<!--TODO find a smarter to iterate?: https://stackoverflow.com/questions/12014704/iterating-over-related-objects-in-django-loop-over-query-set-or-use-one-liner-s-->
 						{% for s in comments %}
 							{% if s.parent == c %}
 								<div class="float-right">

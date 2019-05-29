@@ -26,16 +26,9 @@
 			<div class="card">
 				<div class="card-header">
 					<div class="card-title h5">{{a.title}}</div>
-					<div class="text-right">  
-							{% if a.language == "en" %}
-								last update:
-							{% endif %}
-							{% if a.language == "fr" %}
-								dernière mise à jour:
-							{% endif %}
-							{% if a.language == "es" %}
-								actualización
-							{% endif %}
+					<div class="text-right"> 
+						{% load static %} 
+						<img src="{% static 'website/img/calendar.png' %}" height="12">
 						{{a.last_update}}
 					</div>
 					<div class="card-subtitle text-gray">{{a.category}}</div>		
