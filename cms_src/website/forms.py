@@ -1,14 +1,14 @@
 from django import forms
-from .models import Category
+from .models import Article_category
 
 class BrowseForm(forms.Form):
 	class Meta: 
-		model = Category
+		model = Article_category
 
 	def __init__(self, init_cat=1, init_order="last_update", *args, **kwargs): 
 		super(BrowseForm, self).__init__(*args, **kwargs)
 		self.fields["category"]   = forms.ModelChoiceField(
-			queryset=Category.objects.all(),
+			queryset=Article_category.objects.all(),
 			initial=init_cat,
 			label="")
 		self.fields["order_mode"] = forms.ChoiceField(

@@ -3,6 +3,7 @@ from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator, int_list_validator
 from datetime import datetime
+from abc import abstractmethod
 
 '''Tweaks and tricks'''
 def get_name(self):
@@ -49,39 +50,57 @@ class SiteSetting(SingletonModel):
 
 '''                               categorical models'''
 class Category(models.Model):
+    class Meta: 
+        abstract = True
+        unique_together = [['name','parent']] 
+
     parent        = models.ForeignKey('self', null=True, blank=True, related_name='nested_category', on_delete=models.SET_NULL)
     name          = models.CharField(max_length=50)
-    nesting_level = models.IntegerField(default = 0, editable=False)
-    content_type  = models.CharField(max_length=8, choices=[("article","Articles"),("photo", "Photos")], default="articles")
     path          = models.CharField(default = "", max_length=50, editable=False)
 
+    @abstractmethod
     def save(self, *args, **kwargs):
-        if self.parent != None:
-            self.nesting_level = self.parent.nesting_level + 1
-        elif self.parent == None:
-            self.nesting_level = 0
         self.path = str(self)
-        super(Category, self).save(*args, **kwargs)
-        
-    @staticmethod
-    def load():
-        cache.set('article_categories', Category.objects.filter(content_type="article"))
-        cache.set('photo_categories', Category.objects.filter(content_type="photo"))
-
-    class Meta: 
-        verbose_name_plural = "categories"
-        unique_together = [['name','parent']]       
+        super(Category, self).save(*args, **kwargs)  
     
+    @abstractmethod
     def __str__(self):                           
         full_path = [self.name.lower()]                                        
         k = self.parent                          
-
         while k is not None:
             full_path.append(k.name.lower())
             k = k.parent
 
         return '->'.join(full_path[::-1])
- 
+
+class Article_category(Category):
+    class Meta: 
+        verbose_name_plural = "article_categories"
+
+    @classmethod
+    def load(cls):
+        cache.set('{}'.format(cls.__name__), cls.objects.all()) 
+
+#    def __str__(self):
+#        super().__str__()
+
+#    def save(self):
+#        super().save()
+
+class Photo_category(Category):
+    class Meta: 
+        verbose_name_plural = "photo_categories"
+
+    @classmethod
+    def load(cls):
+        cache.set('{}'.format(cls.__name__), cls.objects.all())
+
+#    def __str__(self):
+#        super().__str__()
+
+#    def save(self):
+#        super().save()
+
 '''                               editorial models'''
 class Person(models.Model): 
     first_name = models.CharField(max_length=50, help_text="first name OR pseudo")
@@ -107,13 +126,13 @@ class Post(models.Model):
     author          = models.ForeignKey(Person, default=0, on_delete=models.SET_DEFAULT)
     rating          = models.PositiveSmallIntegerField(default=0, editable=False)
     nb_views        = models.PositiveIntegerField(default=0, editable=False)
-    category        = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
     tags            = models.CharField(max_length=100, help_text="comma separated tags")
     adult_only      = models.BooleanField(default=False)
     description     = models.TextField(max_length=300, help_text="markdown syntax", null=True, blank=True)
     first_published = models.DateField(auto_now_add=True)
 
 class Article(Post):
+    category        = models.ForeignKey(Article_category, null=True, on_delete=models.SET_NULL)
     last_update     = models.DateField('date published')
     visible         = models.BooleanField(default=True)
     content         = models.TextField()
@@ -123,6 +142,7 @@ class Article(Post):
         return self.title
 
 class Photo(Post):
+    category     = models.ForeignKey(Photo_category, null=True, on_delete=models.SET_NULL)
     photo_models = models.ManyToManyField(Person, related_name="models", blank=True)
     place_name   = models.CharField(max_length=100, null=True, blank=True)
     buy_link     = models.URLField(max_length=200, null=True, blank=True)

@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import SiteSetting, Category, Diplome, Article, Certification, Comment, Photo, Person
+from .models import SiteSetting, Article_category, Photo_category, Diplome, Article, Certification, Comment, Photo, Person
 
 admin.site.register(SiteSetting)
-admin.site.register(Category)
+admin.site.register(Article_category)
+admin.site.register(Photo_category)
 admin.site.register(Diplome)
 admin.site.register(Article)
 admin.site.register(Certification)

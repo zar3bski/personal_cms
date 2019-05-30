@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 
-from .models import SiteSetting, Diplome, Certification, Article, Category, Comment, Photo
+from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category
 from .forms import BrowseForm, CommentForm
 from django.contrib import admin
 from django.core.cache import cache
@@ -28,11 +28,11 @@ class Browse(View):
 
         order_mode = q_args.get("order_mode", "last_update")
         page       = int(q_args.get("page", "1"))
-        root       = Category.objects.get(id=q_args["category"])
+        root       = Article_category.objects.get(id=q_args["category"])
         nav_form   = BrowseForm(root.id, order_mode)     
         breadcrumb = root.path.split('->')
 
-        cat      = Category.objects.filter(path__startswith=root.path).values_list('id', flat=True)
+        cat      = Article_category.objects.filter(path__startswith=root.path).values_list('id', flat=True)
         articles = Article.objects.filter(category__in=cat).order_by("-"+order_mode)[(page-1)*5:(page-1)*5+5]
 
         for a in articles: 
