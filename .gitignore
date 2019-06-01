@@ -3,3 +3,4 @@
 cms_src/staticfiles/
 cms_src/db.sqlite3
 cms_src/website/migrations/
+cms_src/media/*
