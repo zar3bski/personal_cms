@@ -83,6 +83,15 @@ class Education(View):
         context        = {"diploma": diploma, "certifications":certifications}
         return HttpResponse(self.template.render(context, request))
 
+class Gallery(View): 
+    template = loader.get_template("website/gallery.html")
+
+    def get(self,request, super_category):
+        category_ids = cache.get('Photo_category').filter(path__startswith=super_category)
+        photos       = Photo.objects.select_related('category').filter(category__in=category_ids)
+        context      = {"photos":photos}
+        return HttpResponse(self.template.render(context, request))
+
 def thumb_up(request, con_type, post_id): 
     form = request.POST
     print(form["upvote"])

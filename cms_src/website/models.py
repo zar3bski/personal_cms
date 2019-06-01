@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.cache import cache
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator, int_list_validator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import datetime
 from abc import abstractmethod
 
@@ -41,7 +41,10 @@ class SiteSetting(SingletonModel):
     owner_first_name  = models.CharField(max_length=100,default='my_first_name')
     owner_last_name   = models.CharField(max_length=100,default='my_last_name')
     footer            = models.CharField(max_length=200,null=True, blank=True, help_text="markdown syntax")
-    show_galery       = models.BooleanField(default=True)
+    gallery_width     = models.PositiveSmallIntegerField(default=3, validators=[
+                MinValueValidator(2), 
+                MaxValueValidator(5)])
+    show_gallery      = models.BooleanField(default=True)
     show_articles     = models.BooleanField(default=True)
     show_projects     = models.BooleanField(default=True)
     show_education    = models.BooleanField(default=True)
@@ -81,12 +84,6 @@ class Article_category(Category):
     def load(cls):
         cache.set('{}'.format(cls.__name__), cls.objects.all()) 
 
-#    def __str__(self):
-#        super().__str__()
-
-#    def save(self):
-#        super().save()
-
 class Photo_category(Category):
     class Meta: 
         verbose_name_plural = "photo_categories"
@@ -94,12 +91,6 @@ class Photo_category(Category):
     @classmethod
     def load(cls):
         cache.set('{}'.format(cls.__name__), cls.objects.all())
-
-#    def __str__(self):
-#        super().__str__()
-
-#    def save(self):
-#        super().save()
 
 '''                               editorial models'''
 class Person(models.Model): 
@@ -123,7 +114,7 @@ class Post(models.Model):
         unique_together = [['title', 'author']]
 
     title           = models.CharField(max_length=100)
-    author          = models.ForeignKey(Person, default=0, on_delete=models.SET_DEFAULT)
+    author          = models.ForeignKey(Person, null=True, on_delete=models.SET_NULL)
     rating          = models.PositiveSmallIntegerField(default=0, editable=False)
     nb_views        = models.PositiveIntegerField(default=0, editable=False)
     tags            = models.CharField(max_length=100, help_text="comma separated tags")
@@ -146,6 +137,7 @@ class Photo(Post):
     photo_models = models.ManyToManyField(Person, related_name="models", blank=True)
     place_name   = models.CharField(max_length=100, null=True, blank=True)
     buy_link     = models.URLField(max_length=200, null=True, blank=True)
+    photo        = models.ImageField(upload_to='photo')
 
     def __str__(self): 
         return "{} {} {}".format(self.author, self.place_name or "",self.id)
