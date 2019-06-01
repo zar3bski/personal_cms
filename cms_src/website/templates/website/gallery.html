@@ -1,0 +1,22 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Home--{{settings.title}}{% endblock %}
+
+{% block content %}
+{% load common %}
+
+
+<div class="columns">
+	{% for c in 0|range:settings.gallery_width %}
+		<div class="column col-sm-12">
+			{{c}}
+			{% for p in photos|slice:"1:3" %}
+				{{p.title}}
+				
+			{% endfor %}
+		</div>
+	{% endfor %}
+</div>
+
+
+{% endblock %}
