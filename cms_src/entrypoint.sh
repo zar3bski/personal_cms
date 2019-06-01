@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$DATABASE" = "personal_cms_db" ]
+if [ "$DATABASE" = "mariadb" ]
 then
     echo "Waiting for mariadb..."
 

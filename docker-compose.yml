@@ -24,7 +24,7 @@ services:
   db:
     image: mariadb
     volumes:
-      - postgres_data:/var/lib/mariadb/data/
+      - mariadb_data:/var/lib/mariadb/data/
     environment:
       - MYSQL_PASSWORD=N0tTh3D3favlTpAssw0rd
       - MYSQL_DATABASE=personal_cms_db
@@ -32,4 +32,4 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
 
 volumes:
-  postgres_data:
+  mariadb_data:

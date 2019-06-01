@@ -11,13 +11,14 @@ ENV PYTHONUNBUFFERED 1
 
 # install mysqlclient
 RUN apk update \
-    && apk add --virtual build-deps gcc python3-dev musl-dev \
+    && apk add --virtual build-deps gcc python3-dev musl-dev jpeg-dev zlib-dev \
     && apk add --no-cache mariadb-dev mariadb-client
 
 # install dependencies
 RUN pip install --upgrade pip
 RUN pip install pipenv
-RUN pip install mysqlclient 
+RUN pip install mysqlclient
+RUN apk add libjpeg
 COPY ./Pipfile /usr/src/cms/Pipfile
 RUN pipenv install --skip-lock --system --dev
 RUN apk del build-deps
