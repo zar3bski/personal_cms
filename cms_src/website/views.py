@@ -87,8 +87,13 @@ class Gallery(View):
     template = loader.get_template("website/gallery.html")
 
     def get(self,request, super_category):
-        category_ids = cache.get('Photo_category').filter(path__startswith=super_category)
+        #TODO: formulaire pour que le blogeur puisse ajouter des photo (POST) / pagination
+        category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
         photos       = Photo.objects.select_related('category').filter(category__in=category_ids)
+
+        for p in photos: 
+            p.tags         = p.tags.split(',')
+
         context      = {"photos":photos}
         return HttpResponse(self.template.render(context, request))
 
@@ -101,3 +106,4 @@ def thumb_up(request, con_type, post_id):
         elif con_type == "photo": 
             Photo.objects.filter(id=post_id).update(rating=F('rating')+1)
     return redirect(request.META['HTTP_REFERER'])
+    

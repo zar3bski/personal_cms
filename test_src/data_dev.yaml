@@ -10,6 +10,22 @@
     is_staff: 1
     is_active: 1
     date_joined: 2019-06-03 01:12:09.100378
+- model: website.person
+  pk: 2
+  fields:
+    first_name: Georges
+    last_name: Méliès
+    url: https://en.wikipedia.org/wiki/Georges_M%C3%A9li%C3%A8s
+- model: website.person
+  pk: 3
+  fields:
+    first_name: Auguste
+    last_name: Lumière
+- model: website.person
+  pk: 4
+  fields:
+    first_name: Louis
+    last_name: Lumière
 - model: website.article_category
   pk: 1
   fields:
@@ -28,3 +44,94 @@
     parent: NULL
     name: Landscape
     path: landscape
+- model: website.photo_category
+  pk: 2
+  fields:
+    parent: NULL
+    name: Portrait
+    path: portrait
+- model: website.photo
+  pk: 1
+  fields:
+    category: 1
+    title: old lanscape
+    author: 2
+    first_published: 2019-06-03
+    photo: photo/img1.jpg
+    tags: painting, flemish
+    description: Painting made by Rubens
+- model: website.photo
+  pk: 2
+  fields:
+    category: 1
+    title: shinning fields
+    first_published: 2019-06-03
+    photo: photo/img2.jpg
+    tags: fields, country
+- model: website.photo
+  pk: 3
+  fields:
+    category: 1
+    title: The Lac
+    author: 1
+    first_published: 2019-06-03
+    photo: photo/img3.jpg
+    tags: lac, montain
+    place_name: La Chapelle-d'Abondance, FR
+    nb_views: 15
+- model: website.photo
+  pk: 4
+  fields:
+    category: 1
+    title: Winter is coming
+    author: 1
+    first_published: 2019-06-03
+    photo: photo/img4.jpg
+    tags: montain, winter
+    buy_link: https://www.debian.org/index.en.html
+    place_name: La Chapelle-d'Abondance, FR
+    nb_views: 20
+    rating: 1
+- model: website.photo
+  pk: 5
+  fields:
+    category: 1
+    title: Hobbitebourg
+    author: 1
+    first_published: 2019-05-03
+    photo: photo/img5.jpg
+    tags: chill, third age 
+    place_name: Hobbitebourg, The Shire
+    nb_views: 20
+    rating: 1
+- model: website.photo
+  pk: 6
+  fields:
+    category: 2
+    title: Georges Méliès
+    author: 1
+    photo_models: 
+      - 2
+    first_published: 2018-05-03
+    photo: photo/img6.jpg
+    tags: old 
+    nb_views: 5
+    rating: 1
+- model: website.photo
+  pk: 7
+  fields:
+    category: 2
+    title: Lumière brothers
+    author: 2
+    photo_models:
+      - 3
+      - 4
+    first_published: 2019-05-03
+    photo: photo/img7.jpg
+    tags: fathers of cinema 
+    description: Auguste Lumière (1862-1954) et Louis Lumière (1864-1948)
+    buy_link: http://www.institut-lumiere.org/francais/patrimoinelumiere/brevehistoire.html
+    place_name: Lyon, FR
+    nb_views: 22
+    rating: 8
+    

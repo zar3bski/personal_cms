@@ -5,6 +5,6 @@ register = template.Library()
 def filter_range(start, end):
   return range(start, end)
 
-@register.simple_tag()
-def multiply(qty, unit_price, *args, **kwargs):
-    return qty * unit_price
+@register.filter
+def multiply(value, arg, *args, **kwargs):
+    return value * arg

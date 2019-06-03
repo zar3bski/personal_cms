@@ -100,7 +100,7 @@ class Person(models.Model):
     town       = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
-        return "{} {} {}".format(self.first_name, self.last_name or "", self.town or "")
+        return "{} {}".format(self.first_name, self.last_name or "")
 
     class Meta:
         ordering = ['first_name']
