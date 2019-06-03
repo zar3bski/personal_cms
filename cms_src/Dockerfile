@@ -17,7 +17,6 @@ RUN apk update \
 # install dependencies
 RUN pip install --upgrade pip
 RUN pip install pipenv
-RUN pip install mysqlclient
 RUN apk add libjpeg
 COPY ./Pipfile /usr/src/cms/Pipfile
 RUN pipenv install --skip-lock --system --dev

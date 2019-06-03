@@ -1,0 +1,30 @@
+- model: auth.user
+  pk: 1
+  fields:
+    username: john
+    first_name: John
+    last_name: Doe
+    email: john.doe@nowhere.com
+    password: pbkdf2_sha256$150000$SlC1jaqIsLXm$YN1mQA5USaYJR6qhCOhfC2TCLhuuB77zKu0LncoQy3Y=
+    is_superuser: 1
+    is_staff: 1
+    is_active: 1
+    date_joined: 2019-06-03 01:12:09.100378
+- model: website.article_category
+  pk: 1
+  fields:
+    parent: NULL
+    name: Code
+    path: code
+- model: website.article_category
+  pk: 2
+  fields:
+    parent: 1
+    name: Python
+    path: code->python
+- model: website.photo_category
+  pk: 1
+  fields:
+    parent: NULL
+    name: Landscape
+    path: landscape

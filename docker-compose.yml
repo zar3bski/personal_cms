@@ -8,6 +8,7 @@ services:
     command: python /usr/src/cms/manage.py runserver 0.0.0.0:8000
     volumes:
       - ./cms_src/:/usr/src/cms/
+      - ./test_src/:/usr/src/test/
     ports:
       - 8000:8000
     environment:
@@ -19,6 +20,7 @@ services:
       - SQL_PASSWORD=N0tTh3D3favlTpAssw0rd
       - SQL_HOST=db
       - SQL_PORT=3306
+      - DATABASE=mariadb
     depends_on:
       - db
   db:

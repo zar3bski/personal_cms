@@ -4,9 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pyyaml = "==5.1"
 
 [packages]
 django = "==2.2"
+mysqlclient = "==1.4.2"
 markdown = "==3.1.1"
 pillow = "==5.0.0"
 
