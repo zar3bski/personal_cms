@@ -6,7 +6,6 @@
 {% load common %}
 {% load static %}
 
-
 <div class="columns">
 	{% for c in 0|range:settings.gallery_width %}
 		<div class="column col-sm-12">
@@ -44,10 +43,20 @@
 							<div class="card-body">
 								<img src="{% static 'website/img/eye.png' %}" height="16">{{p.nb_views}}
 								{%if p.author is not None%}
-									<img src="{% static 'website/img/photo.png' %}" height="16">{{p.author}}
+									<img src="{% static 'website/img/photo.png' %}" height="16">
+									{%if p.author.url is not None%}
+										<a href="{{p.author.url}}">{{p.author}}</a>
+									{% else %}
+										{{p.author}}
+									{% endif %}
 								{%endif%}
 								{% for per in p.photo_models.all %}
-									<img src="{% static 'website/img/person.png' %}" height="16">{{per}}
+									<img src="{% static 'website/img/person.png' %}" height="16">
+									{% if per.url is not None%}
+										<a href="{{per.url}}">{{per}}</a> 
+									{% else %}
+										{{per}}
+									{%endif%}
 								{% endfor %}
 								{%if p.place_name is not None%}
 									<img src="{% static 'website/img/place.png' %}" height="16">{{p.place_name}}
@@ -69,5 +78,41 @@
 	{% endfor %}
 </div>
 
-
+{% if user.is_authenticated %}
+	<div class="divider text-center" data-content="ADMIN: Add Photo"></div>
+	<form enctype="multipart/form-data" method="post">
+		<div class="columns">
+			{% csrf_token %}
+			<div class="column col-sm-12">
+				{{picture_form.title}}
+				{{picture_form.tags}}
+				<div class="input-group">
+					<span class="input-group-addon">
+						<img src="{% static 'website/img/photo.png' %}" height="20">
+					</span> 
+					{{picture_form.author}}
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon">
+						<img src="{% static 'website/img/18.jpg' %}" height="20">
+					</span> 
+					{{picture_form.adult_only}}
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon">
+						<img src="{% static 'website/img/person.png' %}" height="20">
+					</span> 
+					{{picture_form.photo_models}}
+				</div>
+				{{picture_form.place_name}}
+				{{picture_form.buy_link}}
+				{{picture_form.photo}}
+			</div>
+			<div class="column col-sm-12">
+				{{picture_form.description}}
+				<button class="btn btn-primary">add picture</button>
+			</div>	
+		</div>
+	</form>
+{%endif%}
 {% endblock %}

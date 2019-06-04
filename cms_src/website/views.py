@@ -7,8 +7,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 
-from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category
-from .forms import BrowseForm, CommentForm
+from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person
+from .forms import BrowseForm, CommentForm, AddPictureForm
 from django.contrib import admin
 from django.core.cache import cache
 
@@ -85,17 +85,33 @@ class Education(View):
 
 class Gallery(View): 
     template = loader.get_template("website/gallery.html")
+    picture_form = AddPictureForm
 
     def get(self,request, super_category):
-        #TODO: formulaire pour que le blogeur puisse ajouter des photo (POST) / pagination
+        #TODO: pagination
         category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
         photos       = Photo.objects.select_related('category').filter(category__in=category_ids)
 
         for p in photos: 
             p.tags         = p.tags.split(',')
 
-        context      = {"photos":photos}
+        context      = {"photos":photos, "picture_form": self.picture_form}
         return HttpResponse(self.template.render(context, request))
+
+    @method_decorator(login_required)
+    def post(self,request, super_category):
+        pic = self.picture_form(request.POST, request.FILES)
+        
+        if pic.is_valid(): 
+            pic.clean()
+            p = pic.save(commit=False)
+            p.author       = Person.objects.get(id=pic["author"].value())
+            p.category     = Photo_category.objects.get(name=super_category)
+
+            p.save()
+            pic.save_m2m()
+
+            return redirect(request.META['HTTP_REFERER'])
 
 def thumb_up(request, con_type, post_id): 
     form = request.POST
