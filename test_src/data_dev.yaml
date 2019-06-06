@@ -38,6 +38,12 @@
     parent: 1
     name: Python
     path: code->python
+- model: website.article_category
+  pk: 3
+  fields:
+    parent: 2
+    name: Django
+    path: code->python->django
 - model: website.photo_category
   pk: 1
   fields:
@@ -134,4 +140,61 @@
     place_name: Lyon, FR
     nb_views: 22
     rating: 8
-    
+- model: website.article
+  pk: 1
+  fields:
+    category: 2
+    title: Circa hos dies Lollianus primae lanuginis adulescens
+    first_published: 2019-05-03
+    last_update: 2019-05-06
+    language: fr
+    author: 1
+    tags: python, first, lorem, ipsum
+    content: |
+      Duplexque isdem diebus acciderat malum, quod et Theophilum insontem atrox interceperat casus, et [Serenianus](https://django.readthedocs.io/en/1.2.X/ref/templates/builtins.html) dignus exsecratione cunctorum, innoxius, modo non reclamante publico vigore, discessit.
+
+      Hac ita persuasione reducti intra moenia bellatores obseratis undique portarum aditibus, propugnaculis insistebant et pinnis, congesta undique saxa telaque habentes in promptu, ut si quis se proripuisset interius, multitudine missilium sterneretur et lapidum.
+
+      ```
+      def parse_q_args(function):
+        def wrap(request, *args, **kwargs):
+          if request.GET.urlencode() != "":
+            q_args = {q.split("=")[0]:q.split("=")[1] for q in request.GET.urlencode().split("&")}
+
+            for x in q_args.items(): 
+              kwargs[x[0]]=x[1]
+
+          return function(request, *args, **kwargs)
+        return wrap
+      ```
+
+      Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix interneciva aegre vestigia claritudinis pristinae monstrat admodum pauca.
+- model: website.article
+  pk: 2
+  fields:
+    category: 3
+    title: Alios autem dicere aiunt multo etiam inhumanius
+    first_published: 2018-05-03
+    last_update: 2019-03-06
+    language: en
+    author: 1
+    tags: django, second, lorem, ipsum
+    content: |
+      Duplexque isdem diebus acciderat malum, quod et Theophilum insontem atrox interceperat casus, et [Serenianus](https://django.readthedocs.io/en/1.2.X/ref/templates/builtins.html) dignus exsecratione cunctorum, innoxius, modo non reclamante publico vigore, discessit.
+
+      Hac ita persuasione reducti intra moenia bellatores obseratis undique portarum aditibus, propugnaculis insistebant et pinnis, congesta undique saxa telaque habentes in promptu, ut si quis se proripuisset interius, multitudine missilium sterneretur et lapidum.
+
+      ```
+      def parse_q_args(function):
+        def wrap(request, *args, **kwargs):
+          if request.GET.urlencode() != "":
+            q_args = {q.split("=")[0]:q.split("=")[1] for q in request.GET.urlencode().split("&")}
+
+            for x in q_args.items(): 
+              kwargs[x[0]]=x[1]
+
+          return function(request, *args, **kwargs)
+        return wrap
+      ```
+
+      Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix interneciva aegre vestigia claritudinis pristinae monstrat admodum pauca.
