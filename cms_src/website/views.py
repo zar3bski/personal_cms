@@ -9,8 +9,14 @@ from django.db.models import F
 
 from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person
 from .forms import BrowseForm, CommentForm, AddPictureForm
+from .decorators import parse_q_args
 from django.contrib import admin
 from django.core.cache import cache
+
+from math import ceil
+
+# TODO: this sucks!! uniform cache technique for this model with the rest of the cached models
+settings = SiteSetting.load()
 
 class Home(View):
     template = loader.get_template("website/home.html")
@@ -87,15 +93,21 @@ class Gallery(View):
     template = loader.get_template("website/gallery.html")
     picture_form = AddPictureForm
 
-    def get(self,request, super_category):
-        #TODO: pagination
+    @method_decorator(parse_q_args)
+    def get(self,request, super_category, page=1):
+        item_range = settings.nb_page_gallery
+        # TODO: pagination . Cache number of pho
+        begin, end = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range
         category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
-        photos       = Photo.objects.select_related('category').filter(category__in=category_ids)
+        photos       = Photo.objects.select_related('category').filter(category__in=category_ids)[begin:end]
+        
+        total_items = sum(c.count for c in category_ids)
+        max_page = int(ceil(total_items / item_range))
 
         for p in photos: 
             p.tags         = p.tags.split(',')
 
-        context      = {"photos":photos, "picture_form": self.picture_form}
+        context      = {"photos":photos, "picture_form": self.picture_form, "current_page": page, "max_page":max_page}
         return HttpResponse(self.template.render(context, request))
 
     @method_decorator(login_required)

@@ -44,6 +44,10 @@ class SiteSetting(SingletonModel):
     gallery_width     = models.PositiveSmallIntegerField(default=3, validators=[
                 MinValueValidator(2), 
                 MaxValueValidator(5)])
+    nb_page_gallery   = models.PositiveSmallIntegerField(default=8, validators=[
+                MinValueValidator(4), 
+                MaxValueValidator(30)],
+                help_text='number of items by gallery page')
     show_gallery      = models.BooleanField(default=True)
     show_articles     = models.BooleanField(default=True)
     show_projects     = models.BooleanField(default=True)
@@ -57,9 +61,10 @@ class Category(models.Model):
         abstract = True
         unique_together = [['name','parent']] 
 
-    parent        = models.ForeignKey('self', null=True, blank=True, related_name='nested_category', on_delete=models.SET_NULL)
-    name          = models.CharField(max_length=50)
-    path          = models.CharField(default = "", max_length=50, editable=False)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='nested_category', on_delete=models.SET_NULL)
+    name   = models.CharField(max_length=50)
+    path   = models.CharField(default = "", max_length=50, editable=False)
+    count  = models.PositiveSmallIntegerField(default=0, editable=False)
 
     @abstractmethod
     def save(self, *args, **kwargs):
