@@ -34,9 +34,10 @@ class Browse(View):
         # TODO: put this in global context for the sidebar nav 
         #nav_form   = BrowseForm(root.id, order_mode)     
         breadcrumb = super_category.split('->')
+        begin, end = (int(page)-1)*5,(int(page)-1)*5+5
 
         category_ids = cache.get('Article_category').filter(path__startswith=super_category.lower())
-        articles = Article.objects.filter(category__in=category_ids).order_by("-"+order_mode)[(page-1)*5:(page-1)*5+5]
+        articles = Article.objects.filter(category__in=category_ids).order_by("-"+order_mode)[begin:end]
 
         total_items = sum(c.count for c in category_ids)
         max_page = int(ceil(total_items / 5))

@@ -15,19 +15,17 @@ def refresh_cached_category(sender, instance, using, **kwargs):
 # TODO: understand why this line cause "Problem installing fixture" PCQ count est défini au niveau de la classe abstraite?
 @receiver(post_save, sender=Article)
 @receiver(post_save, sender=Photo)
-def add_one_to_count(sender, instance, using, **kwargs):
-	cat = type(instance.category).objects.get(name=instance.category)
-	cat.count = F('count')+1
-	cat.save()
-	cache.set('{}_category'.format(sender.__name__), sender.objects.all())
+def add_one_to_count(sender, instance, **kwargs):
+    instance.category.count = F('count')+1
+    instance.category.save()
+    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all())
 
 @receiver(post_delete, sender=Article)
 @receiver(post_delete, sender=Photo)
-def drop_one_to_count(sender, instance, using, **kwargs):
-	cat = type(instance.category).objects.get(name=instance.category)
-	cat.count = F('count')-1
-	cat.save()
-	cache.set('{}_category'.format(sender.__name__), sender.objects.all())
+def drop_one_to_count(sender, instance, **kwargs):
+    instance.category.count = F('count')-1
+    instance.category.save()    
+    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all())
 
 @receiver(post_save, sender=User)
 def add_new_user_to_persons(sender, instance, **kwargs): 
