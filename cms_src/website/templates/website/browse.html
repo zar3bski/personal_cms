@@ -67,23 +67,10 @@
 	
 	<div class="column col-3">
 
-		<form action="/browse/" id="browse" method="get">	
-			<button name="page" value="{{page|add:"-1"}}" class="btn btn-action">
-				<i class="icon icon-arrow-left"></i>
-			</button>	
-				
-			<button  name="page" value="{{page}}" class="btn btn-action">
-				<i class="icon icon-refresh"></i>
-			</button>	
-				
-			<button name="page" value="{{page|add:"1"}}" class="btn btn-action">
-				<i class="icon icon-arrow-right"></i>
-			</button>
-
-			<br>
-            
-            {{ nav_form }}  		
+	PLACEHOLER<br> main tags <br> see also
 	</div>
 </div>
+
+{% include "website/pagination.html" %} 
 
 {% endblock %}

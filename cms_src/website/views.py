@@ -16,7 +16,7 @@ from django.core.cache import cache
 from math import ceil
 
 # TODO: this sucks!! uniform cache technique for this model with the rest of the cached models
-settings = SiteSetting.load()
+#settings = SiteSetting.load()
 
 class Home(View):
     template = loader.get_template("website/home.html")
@@ -28,25 +28,24 @@ class Home(View):
 
 class Browse(View):
     template = loader.get_template("website/browse.html")
-         
-    def get(self, request):
-        q_args = {q.split("=")[0]:q.split("=")[1] for q in request.GET.urlencode().split("&")}
+    
+    @method_decorator(parse_q_args) 
+    def get(self, request, super_category, order_mode="last_update", page=1):
+        # TODO: put this in global context for the sidebar nav 
+        #nav_form   = BrowseForm(root.id, order_mode)     
+        breadcrumb = super_category.split('->')
 
-        order_mode = q_args.get("order_mode", "last_update")
-        page       = int(q_args.get("page", "1"))
-        root       = Article_category.objects.get(id=q_args["category"])
-        nav_form   = BrowseForm(root.id, order_mode)     
-        breadcrumb = root.path.split('->')
+        category_ids = cache.get('Article_category').filter(path__startswith=super_category.lower())
+        articles = Article.objects.filter(category__in=category_ids).order_by("-"+order_mode)[(page-1)*5:(page-1)*5+5]
 
-        cat      = Article_category.objects.filter(path__startswith=root.path).values_list('id', flat=True)
-        articles = Article.objects.filter(category__in=cat).order_by("-"+order_mode)[(page-1)*5:(page-1)*5+5]
+        total_items = sum(c.count for c in category_ids)
+        max_page = int(ceil(total_items / 5))
 
         for a in articles: 
             a.tags    = a.tags.split(',')
             a.content = a.content[0:400]
 
-        context  = {"breadcrumb": breadcrumb, "articles": articles, "page": page, "order_mode": order_mode, 
-        "nav_form": nav_form}
+        context  = {"breadcrumb": breadcrumb, "articles": articles, "current_page": page, "max_page":max_page, "order_mode": order_mode}
         return HttpResponse(self.template.render(context, request))
 
 class Reader(View):
@@ -96,7 +95,7 @@ class Gallery(View):
     @method_decorator(parse_q_args)
     def get(self,request, super_category, page=1):
         item_range = settings.nb_page_gallery
-        # TODO: pagination . Cache number of pho
+        
         begin, end = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range
         category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
         photos       = Photo.objects.select_related('category').filter(category__in=category_ids)[begin:end]

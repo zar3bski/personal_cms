@@ -1,0 +1,24 @@
+<div class="flex-centered">
+	<ul class="pagination">
+
+		{% if current_page == "1" %}
+			<li class="page-item disabled"><a href="#" tabindex="-1">Previous</a></li>
+		{%else%}
+	  		<li class="page-item"><a href="?page={{current_page|add:"-1"}}" tabindex="-1">Previous</a></li>
+	  	{% endif %}
+	  		<li class="page-item active"><a href="#">{{current_page}}</a></li>
+	  	{% if current_page|add:1 < max_page %}
+	  		<li class="page-item"><a href="?page={{current_page|add:1}}">{{current_page|add:1}}</a></li>
+	  	{% endif %}
+	  	{% if current_page|add:2 < max_page %}
+	  		<li class="page-item"><a href="#">{{current_page|add:2}}</a></li>
+	  	{% endif %}
+	  		<li class="page-item"><span>...</span></li>
+	  		<li class="page-item"><a href="?page={{max_page}}">{{max_page}}</a></li>
+	  	{% ifequal current_page max_page %}
+	  		<li class="page-item disabled"><a href="#">Next</a></li>
+	  	{% else %}
+	  		<li class="page-item"><a href="?page={{current_page|add:1}}">Next</a></li>
+	  	{% endifequal %}
+	</ul>
+</div>

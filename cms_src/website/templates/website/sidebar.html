@@ -34,10 +34,10 @@
             <ul class="menu menu-nav">
               {% for s in article_categories %}
                 {% if s.parent_id is c.id %}
-                  <li class="menu-item"><a href="/browse/?category={{s.id}}">{{s.name}}</a></li>
+                  <li class="menu-item"><a href="/browse/{{s}}">{{s.name}}</a></li>
                 {% endif %}
               {% endfor %}
-              <li class="menu-item"><a href="/browse/?category={{c.id}}">Misc</a></li>
+              <li class="menu-item"><a href="/browse/{{c}}">Misc</a></li>
             </ul>    
           </div>
         </div>
