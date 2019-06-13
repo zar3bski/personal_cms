@@ -12,7 +12,6 @@ from django.db.models import F
 def refresh_cached_category(sender, instance, using, **kwargs):
     cache.set('{}'.format(type(instance).__name__), type(instance).objects.all())
 
-# TODO: understand why this line cause "Problem installing fixture" PCQ count est défini au niveau de la classe abstraite?
 @receiver(post_save, sender=Article)
 @receiver(post_save, sender=Photo)
 def add_one_to_count(sender, instance, **kwargs):
