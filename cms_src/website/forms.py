@@ -6,17 +6,17 @@ class BrowseForm(forms.Form):
 	class Meta: 
 		model = Article_category
 
-	def __init__(self, init_cat=1, init_order="last_update", *args, **kwargs): 
+	def __init__(self, *args, **kwargs): 
 		super(BrowseForm, self).__init__(*args, **kwargs)
-		self.fields["category"]   = forms.ModelChoiceField(
+		self.fields["super_category"]   = forms.ModelChoiceField(
 			queryset=Article_category.objects.all(),
-			initial=init_cat,
-			label="")
+			label="", 
+			widget= forms.Select(attrs={"class":"form-select"}),
+			to_field_name="path")
 		self.fields["order_mode"] = forms.ChoiceField(
-			widget=forms.RadioSelect,
 			choices=[("last_update", "by last update"), ("rating", "by rate")],
-			initial=init_order,
-			label="")
+			label="",
+			widget=forms.RadioSelect())
 
 class AddPictureForm(ModelForm):
 	class Meta: 

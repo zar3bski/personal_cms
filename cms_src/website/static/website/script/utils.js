@@ -1,9 +1,7 @@
-function showhide() {
-    for(var i = 0; i < arguments.length; i++){
-      var e = document.getElementById(arguments[i]);
-      e.style.display = (e.style.display == 'block') ? 'none' : 'block';
-    }
-  }
+function editURL(url,path,q_args){
+	window.location = url + path.value + '?order_mode=' + q_args; 
+	return false;
+}
 
 function changeField(field_name,value,element,display,name_div,name) {
 	document.getElementById(field_name).value      = value;

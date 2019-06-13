@@ -8,7 +8,7 @@ from . import views
 
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
-    path('browse/<str:super_category>/', views.Browse.as_view(), name='browse'),
+    path('browse/<str:super_category>/<str:order_mode>/', views.Browse.as_view(), name='browse'),
     path('gallery/<str:super_category>/', views.Gallery.as_view(), name='gallery'),
     path('thumb_up/<str:con_type>/<int:post_id>/', views.thumb_up, name="vote"),
     path('education/', views.Education.as_view(), name='education'),

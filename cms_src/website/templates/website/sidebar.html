@@ -34,15 +34,21 @@
             <ul class="menu menu-nav">
               {% for s in article_categories %}
                 {% if s.parent_id is c.id %}
-                  <li class="menu-item"><a href="/browse/{{s}}">{{s.name}}</a></li>
+                  <li class="menu-item"><a href="/browse/{{s}}/last_update">{{s.name}}</a></li>
                 {% endif %}
               {% endfor %}
-              <li class="menu-item"><a href="/browse/{{c}}">Misc</a></li>
+              <li class="menu-item"><a href="/browse/{{c}}/last_update">Misc</a></li>
             </ul>    
           </div>
         </div>
       {% endif %}
     {% endfor %}
+    <!--TODO make sure that this is CSP friendly-->
+    <form onsubmit="window.location = '/browse/' + super_category.value + '/' + order_mode.value; return false;">
+      {{nav_article_form.super_category}}
+      {{nav_article_form.order_mode}}
+      <button type="submit" class="btn">Browse</button>
+    </form>
   {% endif %}
 
   {% if settings.show_articles %}

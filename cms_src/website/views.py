@@ -16,7 +16,7 @@ from django.core.cache import cache
 from math import ceil
 
 # TODO: this sucks!! uniform cache technique for this model with the rest of the cached models
-#settings = SiteSetting.load()
+settings = SiteSetting.load()
 
 class Home(View):
     template = loader.get_template("website/home.html")
@@ -30,9 +30,7 @@ class Browse(View):
     template = loader.get_template("website/browse.html")
     
     @method_decorator(parse_q_args) 
-    def get(self, request, super_category, order_mode="last_update", page=1):
-        # TODO: put this in global context for the sidebar nav 
-        #nav_form   = BrowseForm(root.id, order_mode)     
+    def get(self, request, super_category, order_mode="last_update", page=1):  
         breadcrumb = super_category.split('->')
         begin, end = (int(page)-1)*5,(int(page)-1)*5+5
 
@@ -97,15 +95,15 @@ class Gallery(View):
     def get(self,request, super_category, page=1):
         item_range = settings.nb_page_gallery
         
-        begin, end = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range
+        begin, end   = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range
         category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
         photos       = Photo.objects.select_related('category').filter(category__in=category_ids)[begin:end]
         
-        total_items = sum(c.count for c in category_ids)
-        max_page = int(ceil(total_items / item_range))
+        total_items  = sum(c.count for c in category_ids)
+        max_page     = int(ceil(total_items / item_range))
 
         for p in photos: 
-            p.tags         = p.tags.split(',')
+            p.tags   = p.tags.split(',')
 
         context      = {"photos":photos, "picture_form": self.picture_form, "current_page": page, "max_page":max_page}
         return HttpResponse(self.template.render(context, request))
