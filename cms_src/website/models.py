@@ -38,8 +38,15 @@ class SingletonModel(models.Model):
 class SiteSetting(SingletonModel):
     title             = models.CharField(max_length=100,default='my_site_title')
     about             = models.TextField(null=True, blank=True)
+    keywords          = models.CharField(max_length=120, help_text="comma separated tags", null=True)
+    url               = models.URLField(max_length=200, null=True, blank=True)
+    profil_image      = models.ImageField(null=True, upload_to='photo')
     owner_first_name  = models.CharField(max_length=100,default='my_first_name')
     owner_last_name   = models.CharField(max_length=100,default='my_last_name')
+    bio               = models.TextField(max_length=800, help_text="markdown syntax", null=True, blank=True)
+    display_bio       = models.BooleanField(default=True)
+    display_skills    = models.BooleanField(default=True)
+    display_carousel = models.BooleanField(default=True)
     footer            = models.CharField(max_length=200,null=True, blank=True, help_text="markdown syntax")
     gallery_width     = models.PositiveSmallIntegerField(default=3, validators=[
                 MinValueValidator(2), 
@@ -199,3 +206,9 @@ class Project(models.Model):
     name        = models.CharField(max_length=100)
     url         = models.URLField()
     description = models.TextField()
+
+class Skills(models.Model): 
+    name    = models.CharField(max_length=50)
+    mastery = models.PositiveSmallIntegerField(validators=[
+                MinValueValidator(1), 
+                MaxValueValidator(100)])

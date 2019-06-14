@@ -22,8 +22,11 @@ class Home(View):
     template = loader.get_template("website/home.html")
     def get(self, request):
         article_categories = cache.get('article_categories')
-        print(article_categories)
+        
         context = {}
+
+        if settings.display_carrousel:
+            context["photo"] = None # TODO random picture for carroussel
         return HttpResponse(self.template.render(context, request))
 
 class Browse(View):

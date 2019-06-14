@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}NOTHING FOR NOW{% endblock %}</title>
+  <title>{% block title %}{% endblock %}</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,7 +12,22 @@
   <link rel="stylesheet" type="text/css" href="{% static 'website/css/spectre-icons.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'website/css/spectre.css' %}">
   <script src="{% static 'website/script/utils.js' %}"></script>
-  <!--<link rel="icon" type="image/png" href="{% static 'jengu/img/logo.png' %}">-->
+  
+
+  <!-- SEO \\//_
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <!--TODO: terminer de génériciser cela (url, image)-->
+  <meta property="og:title" content="{{settings.about}}">
+  <meta property="og:url" content="{{settings.url}}">
+  <meta property="og:image" content="https://perrot-ines.com/images/profil.png">
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{settings.about}}">
+  
+  <meta name="keywords" content="{{setting.keywords}}">
+  <meta name="description" content="{{settings.about}}">
+  <meta name="author" content="{{settings.owner_first_name}} {{settings.owner_last_name}}">
 
 </head>
 

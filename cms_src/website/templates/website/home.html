@@ -1,16 +1,31 @@
 {% extends 'website/base.html' %}
 
-{% block title %}Home--{{settings.title}}{% endblock %}
+{% block title %}{{settings.title}} | home{% endblock %}
 
 {% block content %}
+{% load markdown_extras %}
 
-<h2 class="s-title">
+{% if settings.display_carrousel %}
+	<div class="carousel">
+	</div>
+{% endif %}
 
-	{% for cat in article_categories %}
-		{{cat.name}}
-	{% endfor %}
 
-</h2>
+<div class="columns">
+	<div class="column col-8 col-sm-12">
+		{% if settings.display_bio %}
+		<h2 class="s-title">
+			About me
+		</h2>
+		<p>
+			{{settings.bio | markdown | safe}}
+		</p>
+		{% endif %}
+	</div>
 
+	<div class="column col-4 col-sm-12">
+		<img src="{{ MEDIA_URL }}/{{settings.profil_image}}" class="img-responsive">
+	</div>
+</div>
 
 {% endblock %}
