@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
   web:
+    restart: always
     build:
       context: ./cms_src
       dockerfile: Dockerfile.prod
@@ -14,6 +15,7 @@ services:
     depends_on:
       - db
   db:
+    restart: always
     image: mariadb
     volumes:
       - postgres_data:/var/lib/mariadb/data/

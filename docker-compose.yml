@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
   web:
+    restart: always
     build: 
       context: ./cms_src
       dockerfile: Dockerfile
@@ -25,7 +26,8 @@ services:
     depends_on:
       - db
   db:
-    image: mariadb
+    image: mariadb:10.4.5
+    restart: always
     volumes:
       - mariadb_data:/var/lib/mariadb/data/
     environment:
