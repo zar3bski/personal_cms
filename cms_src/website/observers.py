@@ -10,7 +10,7 @@ from django.db.models import F
 @receiver(post_save, sender=Article_category)
 @receiver(post_delete, sender=Article_category)
 def refresh_cached_category(sender, instance, using, **kwargs):
-    cache.set('{}'.format(type(instance).__name__), type(instance).objects.all())
+    cache.set('{}'.format(sender.__name__), sender.objects.all())
 
 @receiver(post_save, sender=Article)
 @receiver(post_save, sender=Photo)
