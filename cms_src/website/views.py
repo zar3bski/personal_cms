@@ -29,8 +29,6 @@ class Home(View):
             if pic:
                 return pic
     def get(self, request):
-        article_categories = cache.get('article_categories')
-        
         context = {}
 
         if settings.display_carousel:
