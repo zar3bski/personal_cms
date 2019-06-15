@@ -5,28 +5,41 @@ from django.http import HttpResponse
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.db.models import F
+from django.db.models import F, Max
 
-from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person
+from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person, Skill
 from .forms import BrowseForm, CommentForm, AddPictureForm
 from .decorators import parse_q_args
 from django.contrib import admin
 from django.core.cache import cache
 
 from math import ceil
+from random import randint
 
-# TODO: this sucks!! uniform cache technique for this model with the rest of the cached models
+# TODO: this sucks!! uniform cache technique for this model with the rest of the cached model
 settings = SiteSetting.load()
 
 class Home(View):
     template = loader.get_template("website/home.html")
+    
+    def _get_random_pic(self,max_id): 
+        while True: 
+            pk  = randint(1, max_id)
+            pic = Photo.objects.filter(pk=pk).first()
+            if pic:
+                return pic
     def get(self, request):
         article_categories = cache.get('article_categories')
         
         context = {}
 
-        if settings.display_carrousel:
-            context["photo"] = None # TODO random picture for carroussel
+        if settings.display_carousel:
+            max_id = Photo.objects.all().aggregate(max_id=Max("id"))['max_id']
+            context["photos"] = [self._get_random_pic(max_id) for i in range(5)] 
+
+        if settings.display_skills:
+            context["skills"] = Skill.objects.all()
+
         return HttpResponse(self.template.render(context, request))
 
 class Browse(View):

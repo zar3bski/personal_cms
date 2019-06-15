@@ -207,8 +207,11 @@ class Project(models.Model):
     url         = models.URLField()
     description = models.TextField()
 
-class Skills(models.Model): 
+class Skill(models.Model): 
     name    = models.CharField(max_length=50)
     mastery = models.PositiveSmallIntegerField(validators=[
                 MinValueValidator(1), 
                 MaxValueValidator(100)])
+
+    def __str__(self):
+        return self.name

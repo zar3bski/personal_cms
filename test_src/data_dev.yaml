@@ -152,6 +152,46 @@
     place_name: Lyon, FR
     nb_views: 22
     rating: 8
+- model: website.skill
+  pk: 1
+  fields:
+    name: Python
+    mastery: 81
+- model: website.skill
+  pk: 2
+  fields:
+    name: Django
+    mastery: 50
+- model: website.skill
+  pk: 3
+  fields:
+    name: Tensorflow
+    mastery: 50
+- model: website.skill
+  pk: 4
+  fields: 
+    name: Linux
+    mastery: 60
+- model: website.skill
+  pk: 5
+  fields:
+    name: Docker
+    mastery: 30
+- model: website.skill
+  pk: 6
+  fields:
+    name: Scala
+    mastery: 20
+- model: website.skill
+  pk: 7
+  fields:
+    name: R
+    mastery: 40
+- model: website.skill
+  pk: 8
+  fields:
+    name: Apache
+    mastery: 50
 - model: website.article
   pk: 1
   fields:

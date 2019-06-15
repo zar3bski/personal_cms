@@ -4,12 +4,40 @@
 
 {% block content %}
 {% load markdown_extras %}
+{% load common %}
 
-{% if settings.display_carrousel %}
+{% if settings.display_carousel %}
 	<div class="carousel">
-	</div>
-{% endif %}
+		{% for p in photos %}
+			{% if forloop.counter0 is 0 %}
+				<input class="carousel-locator" id="slide-{{forloop.counter0}}" type="radio" name="carousel-radio" hidden="" checked="">
+			{%else%}
+				<input class="carousel-locator" id="slide-{{forloop.counter0}}" type="radio" name="carousel-radio" hidden="">
+			{%endif%}
+		{% endfor %}
 
+		<div class="carousel-container">
+			{% for p in photos %}
+				<figure class="carousel-item">
+					<label class="item-prev btn btn-action btn-lg" for="slide-{{ forloop.counter0|add:"-1"}}">
+						<i class="icon icon-arrow-left"></i>
+					</label>
+      				<label class="item-next btn btn-action btn-lg" for="slide-{{ forloop.counter0|add:1}}">
+      					<i class="icon icon-arrow-right"></i>
+      				</label>
+      				<img class="img-fit-cover" width="100%" src="{{ MEDIA_URL }}/{{p.photo}}" alt="{{p.title}}">
+				</figure>
+			{% endfor %}
+		</div>
+
+		<div class="carousel-nav">
+			{% for p in photos %}
+				<label class="nav-item text-hide c-hand" for="slide-{{ forloop.counter0}}">{{ forloop.counter0}}</label>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="divider"></div>
+{% endif %}
 
 <div class="columns">
 	<div class="column col-8 col-sm-12">
@@ -27,5 +55,22 @@
 		<img src="{{ MEDIA_URL }}/{{settings.profil_image}}" class="img-responsive">
 	</div>
 </div>
+
+{%if settings.display_skills%}
+<div class="divider"></div>
+	<div class="columns">
+		{% for c in 0|range:4 %}
+			<div class="column col-3 col-sm-6">
+				{%with begin=c|multiply:4|stringformat:"s" end=c|multiply:4|add:4|stringformat:"s"%}
+					{% with skills_slice=begin|add:":"|add:end %}
+						{% for s in skills|slice:skills_slice %}
+							{{s.name}} &nbsp; <meter class="meter" value="{{s.mastery}}" optimum="80" min="0" max="100" low="40" high="60"></meter>
+						{% endfor %}
+					{% endwith %}
+				{% endwith %}
+			</div>
+		{% endfor %}
+	</div>
+{%endif%}
 
 {% endblock %}
