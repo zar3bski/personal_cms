@@ -10,21 +10,21 @@ from django.db.models import F
 @receiver(post_save, sender=Article_category)
 @receiver(post_delete, sender=Article_category)
 def refresh_cached_category(sender, instance, using, **kwargs):
-    cache.set('{}'.format(sender.__name__), sender.objects.all())
+    cache.set('{}'.format(sender.__name__), sender.objects.all(),None)
 
 @receiver(post_save, sender=Article)
 @receiver(post_save, sender=Photo)
 def add_one_to_count(sender, instance, **kwargs):
     instance.category.count = F('count')+1
     instance.category.save()
-    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all())
+    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all(),None)
 
 @receiver(post_delete, sender=Article)
 @receiver(post_delete, sender=Photo)
 def drop_one_to_count(sender, instance, **kwargs):
     instance.category.count = F('count')-1
     instance.category.save()    
-    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all())
+    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all(),None)
 
 @receiver(post_save, sender=User)
 def add_new_user_to_persons(sender, instance, **kwargs): 

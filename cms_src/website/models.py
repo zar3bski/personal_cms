@@ -32,7 +32,7 @@ class SingletonModel(models.Model):
         return cache.get(cls.__name__)
 
     def set_cache(self):
-        cache.set(self.__class__.__name__, self)
+        cache.set(self.__class__.__name__, self, None)
 
 '''                               MODELS'''
 class SiteSetting(SingletonModel):
@@ -94,7 +94,7 @@ class Article_category(Category):
 
     @classmethod
     def load(cls):
-        cache.set('{}'.format(cls.__name__), cls.objects.all()) 
+        cache.set('{}'.format(cls.__name__), cls.objects.all(), None) 
 
 class Photo_category(Category):
     class Meta: 
@@ -102,7 +102,7 @@ class Photo_category(Category):
 
     @classmethod
     def load(cls):
-        cache.set('{}'.format(cls.__name__), cls.objects.all())
+        cache.set('{}'.format(cls.__name__), cls.objects.all(), None)
 
 '''                               editorial models'''
 class Person(models.Model): 
