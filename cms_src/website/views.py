@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F, Max
 
 from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person, Skill
-from .forms import BrowseForm, CommentForm, AddPictureForm
+from .forms import BrowseForm, CommentForm, AddPictureForm, MessageForm
 from .decorators import parse_q_args
 from django.contrib import admin
 from django.core.cache import cache
@@ -20,7 +20,8 @@ from random import randint
 settings = SiteSetting.load()
 
 class Home(View):
-    template = loader.get_template("website/home.html")
+    template     = loader.get_template("website/home.html")
+    message_form = MessageForm
     
     def _get_random_pic(self,max_id): 
         while True: 
@@ -29,7 +30,7 @@ class Home(View):
             if pic:
                 return pic
     def get(self, request):
-        context = {}
+        context = {"message_form": self.message_form}
 
         if settings.display_carousel:
             max_id = Photo.objects.all().aggregate(max_id=Max("id"))['max_id']
@@ -39,6 +40,15 @@ class Home(View):
             context["skills"] = Skill.objects.all()
 
         return HttpResponse(self.template.render(context, request))
+
+    def post(self, request): 
+        message = self.message_form(request.POST)
+
+        if message.is_valid():
+            message.clean()
+            message.save()
+
+        return redirect(request.META['HTTP_REFERER'])
 
 class Browse(View):
     template = loader.get_template("website/browse.html")

@@ -168,6 +168,16 @@ class Comment(models.Model):
     def __repr__(self): 
         return self
 
+class Message(models.Model):
+    date    = models.DateField(auto_now_add=True, editable=False)
+    author  = models.CharField(max_length=100)
+    mail    = models.EmailField()
+    subject = models.CharField(max_length=120)
+    content = models.TextField(max_length=500)
+
+    def __str__(self):
+        return "{}: {}".format(self.author, self.subject)
+
 class Publication(models.Model):
     date    = models.DateField('date published')
     typeof  = models.CharField(max_length=20)

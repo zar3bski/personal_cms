@@ -73,4 +73,15 @@
 	</div>
 {%endif%}
 
+<div class="divider text-center" data-content="CONTACT"></div>
+
+<div class="columns">
+	<div class="column col-6 col-sm-12">
+		<form method="post">
+			{% csrf_token %}
+			{{message_form}}
+			<input type="submit" name="send_message">
+		</form>
+	</div>
+</div>
 {% endblock %}

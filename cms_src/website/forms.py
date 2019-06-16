@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Article_category, Photo
+from .models import Article_category, Photo, Message
 
 class BrowseForm(forms.Form):
 	class Meta: 
@@ -22,7 +22,7 @@ class AddPictureForm(ModelForm):
 	class Meta: 
 		model   = Photo
 		fields  = ["title","author","tags","adult_only","description","photo_models","place_name","buy_link","photo"]
-		labels = {k:"" for k in fields}
+		labels  = {k:"" for k in fields}
 	def __init__(self, *args, **kwargs): 
 		super().__init__(*args, **kwargs)
 		self.fields["title"].widget.attrs.update({'placeholder': 'Title', "class":"form-input"})
@@ -34,6 +34,18 @@ class AddPictureForm(ModelForm):
 		self.fields["place_name"].widget.attrs.update({'placeholder': 'Place Name', "class":"form-input"})
 		self.fields["buy_link"].widget.attrs.update({'placeholder': 'Buy Link', "class":"form-input"})
 		self.fields["photo"].widget.attrs.update({"class":"form-input"})
+
+class MessageForm(ModelForm): 
+	class Meta:
+		model   = Message
+		fields  = ["author", "mail", "subject", "content"]
+		labels  = {k:"" for k in fields}
+	def __init__(self, *args, **kwargs): 
+		super().__init__(*args, **kwargs)
+		self.fields["author"].widget.attrs.update({'placeholder': 'Your name', "class":"form-input"})
+		self.fields["mail"].widget.attrs.update({'placeholder': 'Your email', "class":"form-input"})
+		self.fields["subject"].widget.attrs.update({'placeholder': 'About', "class":"form-input"})
+		self.fields["content"].widget.attrs.update({'placeholder': 'Message', "class":"form-input", "rows":"3"})
 
 class CommentForm(forms.Form):
 	author  = forms.CharField(
