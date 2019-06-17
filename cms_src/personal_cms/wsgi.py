@@ -10,11 +10,12 @@ https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-from website.models import Article_category, Photo_category
+from website.models import Article_category, Photo_category, ExternalAccount
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'personal_cms.settings')
 
 Article_category.load()
 Photo_category.load()
+ExternalAccount.load()
 
 application = get_wsgi_application()

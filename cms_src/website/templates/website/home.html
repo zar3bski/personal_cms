@@ -80,8 +80,25 @@
 		<form method="post">
 			{% csrf_token %}
 			{{message_form}}
-			<input type="submit" name="send_message">
+			<div class="float-right"><button class="btn">Send</button></div>
 		</form>
+	</div>
+	<div class="hide-sm">
+		<div class="divider-vert"></div>
+		<div class="column col-4 col-ml-auto">
+			{% for c in 0|range:5 %}
+				<div class="flex-centered">
+					{%with begin=c|multiply:5|stringformat:"s" end=c|multiply:5|add:5|stringformat:"s"%}
+						{% with ea_slice=begin|add:":"|add:end %}
+								{%for ea in external_accounts|slice:ea_slice%}
+									<a href="{{ea.url}}"> <img height="50px" src="{{ MEDIA_URL }}/{{ea.logo}}"> </a>&nbsp; &nbsp;
+								{%endfor%}
+						{% endwith %}
+					{% endwith %}
+				</div>
+			{% endfor %}
+
+		</div>
 	</div>
 </div>
 {% endblock %}

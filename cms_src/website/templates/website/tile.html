@@ -1,4 +1,6 @@
 
+{% load common %}
+
 <div class="flex-centered">
 	<a href="/">
 		<figure class="avatar avatar-lg">
@@ -6,3 +8,16 @@
 		</figure>
 	</a>
 </div>
+<br>
+
+{% for c in 0|range:4 %}
+	<div class="flex-centered">
+		{%with begin=c|multiply:4|stringformat:"s" end=c|multiply:4|add:4|stringformat:"s"%}
+			{% with ea_slice=begin|add:":"|add:end %}
+					{%for ea in external_accounts|slice:ea_slice%}
+						<a href="{{ea.url}}"> <img height="25px" src="{{ MEDIA_URL }}/{{ea.logo}}"> </a>&nbsp; &nbsp;
+					{%endfor%}
+			{% endwith %}
+		{% endwith %}
+	</div>
+{% endfor %}

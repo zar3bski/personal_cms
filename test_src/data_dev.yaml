@@ -10,6 +10,36 @@
     is_staff: 1
     is_active: 1
     date_joined: 2019-06-03 01:12:09.100378
+- model: website.externalaccount
+  pk: 1
+  fields: 
+    plateform_name: Facebook
+    url: https://youtu.be/oavMtUWDBTM
+    logo: logo/facebook.png
+- model: website.externalaccount
+  pk: 2
+  fields:
+    plateform_name: Github
+    url: https://youtu.be/oavMtUWDBTM
+    logo: logo/github.png
+- model: website.externalaccount
+  pk: 3
+  fields:
+    plateform_name: Gitlab
+    url: https://youtu.be/oavMtUWDBTM
+    logo: logo/gitlab.png
+- model: website.externalaccount
+  pk: 4
+  fields:
+    plateform_name: Linked'In
+    url: https://youtu.be/oavMtUWDBTM
+    logo: logo/linked-in.png
+- model: website.externalaccount
+  pk: 5
+  fields:
+    plateform_name: Youtube
+    url: https://youtu.be/oavMtUWDBTM
+    logo: logo/youtube.png
 - model: website.sitesetting
   pk: 1
   fields:

@@ -62,6 +62,17 @@ class SiteSetting(SingletonModel):
     show_publications = models.BooleanField(default=True)
     show_jobs         = models.BooleanField(default=True)
 
+class ExternalAccount(models.Model):
+    plateform_name = models.CharField(max_length=60)
+    url            = models.URLField()
+    logo           = models.ImageField(upload_to='logo')
+    @classmethod
+    def load(cls):
+        cache.set('{}'.format(cls.__name__), cls.objects.all(), None)
+
+    def __str__(self): 
+        return self.plateform_name
+
 '''                               categorical models'''
 class Category(models.Model):
     class Meta: 
@@ -87,22 +98,17 @@ class Category(models.Model):
             k = k.parent
 
         return '->'.join(full_path[::-1])
+    @classmethod
+    def load(cls):
+        cache.set('{}'.format(cls.__name__), cls.objects.all(), None)
 
 class Article_category(Category):
     class Meta: 
         verbose_name_plural = "article_categories"
 
-    @classmethod
-    def load(cls):
-        cache.set('{}'.format(cls.__name__), cls.objects.all(), None) 
-
 class Photo_category(Category):
     class Meta: 
         verbose_name_plural = "photo_categories"
-
-    @classmethod
-    def load(cls):
-        cache.set('{}'.format(cls.__name__), cls.objects.all(), None)
 
 '''                               editorial models'''
 class Person(models.Model): 
