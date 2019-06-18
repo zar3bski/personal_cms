@@ -9,7 +9,7 @@ from django.db.models import F, Max
 
 from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person, Skill
 from .forms import BrowseForm, CommentForm, AddPictureForm, MessageForm
-from .decorators import parse_q_args
+from .decorators import parse_q_args, settings_from_cache
 from django.contrib import admin
 from django.core.cache import cache
 from django.apps import apps
@@ -17,8 +17,6 @@ from django.apps import apps
 from math import ceil
 from random import randint
 
-# TODO: this sucks!! uniform cache technique for this model with the rest of the cached model
-settings = SiteSetting.load()
 
 class Home(View):
     template     = loader.get_template("website/home.html")
@@ -30,8 +28,10 @@ class Home(View):
             pic = Photo.objects.filter(pk=pk).first()
             if pic:
                 return pic
+
     def get(self, request):
         context = {"message_form": self.message_form}
+        settings = cache.get('SiteSetting')
 
         if settings.display_carousel:
             max_id = Photo.objects.all().aggregate(max_id=Max("id"))['max_id']
@@ -118,6 +118,7 @@ class Gallery(View):
 
     @method_decorator(parse_q_args)
     def get(self,request, super_category, page=1):
+        settings = cache.get('SiteSetting')
         item_range = settings.nb_page_gallery
         
         begin, end   = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range

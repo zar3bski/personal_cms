@@ -16,24 +16,14 @@ class SingletonModel(models.Model):
     class Meta:
         abstract = True
 
+    @abstractmethod
     def save(self, *args, **kwargs):
-            self.pk = 1
-            super(SingletonModel, self).save(*args, **kwargs)
-            self.set_cache()
-    
-    def delete(self, *args, **kwargs):
-        pass
+        self.pk = 1
+        super(SingletonModel, self).save(*args, **kwargs)
 
     @classmethod
     def load(cls):
-        if cache.get(cls.__name__) is None:
-            obj, created = cls.objects.get_or_create(pk=1)
-            if not created:
-                obj.set_cache()
-        return cache.get(cls.__name__)
-
-    def set_cache(self):
-        cache.set(self.__class__.__name__, self, None)
+        cache.set('{}'.format(cls.__name__), cls.objects.get(pk=1), None)
 
 '''                               MODELS'''
 class SiteSetting(SingletonModel):
@@ -47,7 +37,7 @@ class SiteSetting(SingletonModel):
     bio               = models.TextField(max_length=800, help_text="markdown syntax", null=True, blank=True)
     display_bio       = models.BooleanField(default=True)
     display_skills    = models.BooleanField(default=True)
-    display_carousel = models.BooleanField(default=True)
+    display_carousel  = models.BooleanField(default=True)
     footer            = models.CharField(max_length=200,null=True, blank=True, help_text="markdown syntax")
     gallery_width     = models.PositiveSmallIntegerField(default=3, validators=[
                 MinValueValidator(2), 
