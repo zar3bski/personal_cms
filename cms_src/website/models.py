@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import datetime
 from abc import abstractmethod
+from datetime import timedelta
 
 '''Tweaks and tricks'''
 def get_name(self):
@@ -55,12 +56,13 @@ class SiteSetting(SingletonModel):
                 MinValueValidator(4), 
                 MaxValueValidator(30)],
                 help_text='number of items by gallery page')
-    show_gallery      = models.BooleanField(default=True)
-    show_articles     = models.BooleanField(default=True)
-    show_projects     = models.BooleanField(default=True)
-    show_education    = models.BooleanField(default=True)
-    show_publications = models.BooleanField(default=True)
-    show_jobs         = models.BooleanField(default=True)
+    show_gallery        = models.BooleanField(default=True)
+    show_articles       = models.BooleanField(default=True)
+    show_projects       = models.BooleanField(default=True)
+    show_education      = models.BooleanField(default=True)
+    show_publications   = models.BooleanField(default=True)
+    show_jobs           = models.BooleanField(default=True)
+    show_certifications = models.BooleanField(default=True)
 
 class ExternalAccount(models.Model):
     plateform_name = models.CharField(max_length=60)
@@ -203,6 +205,7 @@ class Timeline(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ["-year"]
 
     def __str__(self): 
         return "{} _ {}".format(self.title, self.year)
@@ -217,7 +220,17 @@ class Certification(Timeline):
 class Job(Timeline):
     duration     = models.DurationField()
     job_type     = models.CharField(max_length=100)
-     
+
+    @property
+    def duration_hrf(self): 
+        t = self.duration.days
+        if t > 365:
+            return "{} Y {} M".format(t//365, int(t/365//30))
+        elif 60< t <= 365:
+            return "{} M {} W".format(t//30, int(t/30//7))
+        elif 60 >= t:
+            return "{} W".format(t//7)
+
 class Project(models.Model):
     name        = models.CharField(max_length=100)
     url         = models.URLField()

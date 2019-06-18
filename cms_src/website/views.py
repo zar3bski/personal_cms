@@ -12,6 +12,7 @@ from .forms import BrowseForm, CommentForm, AddPictureForm, MessageForm
 from .decorators import parse_q_args
 from django.contrib import admin
 from django.core.cache import cache
+from django.apps import apps
 
 from math import ceil
 from random import randint
@@ -102,13 +103,13 @@ class Reader(View):
             c.save()
             return redirect(request.META['HTTP_REFERER'])
 
-class Education(View):
-    template = loader.get_template("website/education.html")
-
-    def get(self, request):
-        diploma        = Diplome.objects.all().order_by('-year')
-        certifications = Certification.objects.all().order_by('-year')
-        context        = {"diploma": diploma, "certifications":certifications}
+class Timeline(View):
+    template = loader.get_template("website/timeline.html")
+    
+    def get(self, request, model_name):
+        model    = apps.get_model(app_label='website', model_name=model_name)
+        timeline = model.objects.all()
+        context  = {"model_name": model._meta.verbose_name_plural.title(), "timeline":timeline}
         return HttpResponse(self.template.render(context, request))
 
 class Gallery(View): 

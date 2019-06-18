@@ -1,0 +1,48 @@
+{% extends 'website/base.html' %}
+
+{% block title %}{{settings.title}}--{{model_name}}{% endblock %}
+
+{% block content %}
+{% load markdown_extras %}
+{% load static %}
+
+<h2 class="s-title">
+    {{model_name}}
+</h2>
+
+<div class="columns">
+    <div class="column col-7 col-mx-auto col-sm-12">
+        <div class="timeline">
+            {% for t in timeline %}                
+                <div class="timeline-item" id="{{t.name}}">
+                    <div class="timeline-left">
+                        <b>{{t.year}}</b> 
+                    </div>
+
+                    <div class="timeline-content">
+                        <b>{{t.title}}</b> 
+                        {%if t.duration %}
+                            &nbsp; | &nbsp; <img src="{% static 'website/img/calendar.png' %}" height="16"> {{t.duration_hrf}}
+                        {%endif%}
+                        {%if t.job_type %}
+                            <div class="float-right"><span class="chip">{{t.job_type}}</span></div>
+                        {%endif%}
+                        <br>
+                        <a href={{d.link}} target="_blank" rel="noopener noreferrer">
+                            {{t.institution}}
+                        </a>
+                        <br>
+                        
+                        {{ t.details | markdown | safe }}
+
+                        {%if t.expire %}
+                            expire : {{t.expire}}
+                        {%endif%}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
