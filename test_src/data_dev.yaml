@@ -108,11 +108,13 @@
     plateform_name: Youtube
     url: https://youtu.be/oavMtUWDBTM
     logo: logo/youtube.png
+
 - model: website.sitesetting
   pk: 1
   fields:
     title: My awsome site
     owner_first_name: John
+    url: https://somewhere.overtherainbow.com
     profil_image: photo/Red_Panda_Simon_01.jpg
     about: Blog about photograpy, philosophy and code
     keywords: code,python,django
