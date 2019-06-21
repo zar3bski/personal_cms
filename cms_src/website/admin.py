@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from .models import *
 from personal_cms.widgets import CssEditor
+from django.conf import settings
 
 class DesignForm(forms.ModelForm):
     model = UserDesign
@@ -11,7 +12,7 @@ class DesignForm(forms.ModelForm):
             'code': CssEditor(attrs={'style': 'width: 90%; height: 100%;'}),
         }
         initial ={
-        	'code': UserDesign.objects.first()
+        	'code': open(settings.BASE_DIR+'/website/static/website/css/custom.css').read() or open(settings.BASE_DIR+'/website/static/website/css/custom-default.css').read()
         }
 
 class DesignFormAdmin(admin.ModelAdmin):
