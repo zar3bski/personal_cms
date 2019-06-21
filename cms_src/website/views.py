@@ -9,7 +9,7 @@ from django.db.models import F, Max
 
 from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person, Skill
 from .forms import BrowseForm, CommentForm, AddPictureForm, MessageForm
-from .decorators import parse_q_args, settings_from_cache
+from .decorators import parse_q_args
 from django.contrib import admin
 from django.core.cache import cache
 from django.apps import apps
@@ -20,7 +20,7 @@ from random import randint
 
 class Home(View):
     template     = loader.get_template("website/home.html")
-    message_form = MessageForm
+    message_form = MessageForm 
     
     def _get_random_pic(self,max_id): 
         while True: 
@@ -30,8 +30,8 @@ class Home(View):
                 return pic
 
     def get(self, request):
-        context = {"message_form": self.message_form}
         settings = cache.get('SiteSetting')
+        context = {"message_form": self.message_form} 
 
         if settings.display_carousel:
             max_id = Photo.objects.all().aggregate(max_id=Max("id"))['max_id']

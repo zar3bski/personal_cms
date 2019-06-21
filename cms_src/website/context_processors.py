@@ -1,4 +1,3 @@
-from .models import SiteSetting
 from .forms import BrowseForm
 from django.core.cache import cache
 

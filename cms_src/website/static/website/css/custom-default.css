@@ -1,0 +1,121 @@
+body {
+  background-color: #393e3f;
+  background-image: url("https://www.transparenttextures.com/patterns/black-orchid.png");
+/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+  color: #edeeef;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: .9rem;
+}
+
+/*sidebar*/
+.off-canvas .off-canvas-sidebar {
+  background: #d4d6d4;
+  color: #383838;
+}
+
+/*cards*/
+.card {
+  background: #fff;
+  border: .05rem solid #dadee4;
+  color: #303030;
+}
+
+/*buttons*/
+.btn {
+  border: .05rem solid #08b225;
+  color: #08b225;
+}
+
+.btn:hover {
+  background: #38d152;
+  color: #effff2;
+}
+
+.btn.btn-primary {
+  background: #03b221;
+}
+
+.btn.btn-primary:focus,
+.btn.btn-primary:hover {
+  background: #35cc4f;
+}
+
+.btn.btn-primary:active,
+.btn.btn-primary.active {
+  background: #fc7532;
+}
+
+/*links*/
+a {
+  color: #218432;
+}
+
+a:focus {
+  box-shadow: 0 0 0 .1rem rgba(33, 120, 50,.2);
+}
+
+a:focus,
+a:hover,
+a:active,
+a.active {
+  color: #2db544;
+}
+
+a:visited {
+  color: #48af59;
+}
+
+/*menu item*/
+.menu {
+  background: #fff;
+  box-shadow: 0 .05rem .2rem rgba(48, 55, 66, .3);
+}
+
+.menu .menu-item > a {
+  color: inherit;
+}
+
+.menu .menu-item > a:focus,
+.menu .menu-item > a:hover {
+  background: #72e586;
+  color: #0f0b09;
+}
+
+.menu .menu-item > a:active,
+.menu .menu-item > a.active {
+  background: #84ed96;
+  color: #ff6b11;
+}
+
+/*forms*/
+.form-input {
+  background: #f4f4f4;
+  border: .05rem solid #938882;
+  border-radius: .1rem;
+  color: #3b4351;
+}
+
+.form-input:focus {
+  border-color: #38d152; 
+  box-shadow: 0 0 0 .1rem rgba(87, 85, 217, .2);
+}
+
+.form-select {
+  background: #fff; 
+  border: .05rem solid #938882;
+}
+
+.form-select:focus {
+  border-color: #38d152; 
+  box-shadow: 0 0 0 .1rem rgba(87, 85, 217, .2);
+}
+
+/*pagination*/
+.pagination .page-item a:focus,
+.pagination .page-item a:hover {
+  color: #38d152;
+}
+.pagination .page-item.active a {
+  background: #08b225;
+  color: #fff;
+}

@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import datetime
 from abc import abstractmethod
 from datetime import timedelta
+from django.conf import settings
 
 '''Tweaks and tricks'''
 def get_name(self):
@@ -23,7 +24,7 @@ class SingletonModel(models.Model):
 
     @classmethod
     def load(cls):
-        cache.set('{}'.format(cls.__name__), cls.objects.get(pk=1), None)
+        cache.set('{}'.format(cls.__name__), cls.objects.first(), None)
 
 '''                               MODELS'''
 class SiteSetting(SingletonModel):
@@ -53,6 +54,13 @@ class SiteSetting(SingletonModel):
     show_publications   = models.BooleanField(default=True)
     show_jobs           = models.BooleanField(default=True)
     show_certifications = models.BooleanField(default=True)
+
+class UserDesign(SingletonModel): 
+    name   = models.CharField(max_length=255, default="default")
+    code   = models.TextField(default=open(settings.BASE_DIR+'/website/static/website/css/custom-default.css').read())
+    
+    def __unicode__(self):
+        return self.name
 
 class ExternalAccount(models.Model):
     plateform_name = models.CharField(max_length=60)

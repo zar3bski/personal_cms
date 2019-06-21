@@ -1,9 +1,10 @@
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
-from .models import Article_category, Photo_category, Person, Photo, Article, ExternalAccount, SiteSetting
+from .models import Article_category, Photo_category, Person, Photo, Article, ExternalAccount, SiteSetting, UserDesign
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db.models import F
+from django.conf import settings
 
 @receiver(post_save, sender=ExternalAccount)
 @receiver(post_delete, sender=ExternalAccount)
@@ -14,10 +15,20 @@ from django.db.models import F
 def refresh_cached_model(sender, instance, using, **kwargs):
     cache.set('{}'.format(sender.__name__), sender.objects.all(),None)
 
+@receiver(post_save, sender=UserDesign)
+@receiver(post_delete, sender=UserDesign)
 @receiver(post_save, sender=SiteSetting)
 @receiver(post_delete, sender=SiteSetting)
 def refresh_cached_singleton(sender, instance, **kwargs):
     cache.set('{}'.format(sender.__name__), instance, None)
+    
+@receiver(post_save, sender=UserDesign)
+@receiver(post_delete, sender=UserDesign)
+def override_css(sender, instance, **kwargs):
+    with open(settings.BASE_DIR+'/website/static/website/css/custom.css', "w") as css:
+        css.write(instance.code)
+    with open(settings.STATIC_ROOT+'/website/css/custom.css', "w") as css:
+        css.write(instance.code)
 
 @receiver(post_save, sender=Article)
 @receiver(post_save, sender=Photo)

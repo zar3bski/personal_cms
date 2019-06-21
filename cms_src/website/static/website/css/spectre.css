@@ -583,7 +583,7 @@ html:lang(ko),
 .btn:focus,
 .btn:hover {
   background: #f1f1fc;
-  border-color: #4b48d6;
+  border-color: inherit;
   text-decoration: none;
 }
 
@@ -611,21 +611,21 @@ html:lang(ko),
 
 .btn.btn-primary {
   background: #5755d9;
-  border-color: #4b48d6;
+  border-color: inherit;
   color: #fff;
 }
 
 .btn.btn-primary:focus,
 .btn.btn-primary:hover {
   background: #4240d4;
-  border-color: #3634d2;
+  border-color: inherit;
   color: #fff;
 }
 
 .btn.btn-primary:active,
 .btn.btn-primary.active {
   background: #3a38d2;
-  border-color: #302ecd;
+  border-color: inherit;
   color: #fff;
 }
 
@@ -695,14 +695,14 @@ html:lang(ko),
 .btn.btn-link {
   background: transparent;
   border-color: transparent;
-  color: #5755d9;
+  color: inherit;
 }
 
 .btn.btn-link:focus,
 .btn.btn-link:hover,
 .btn.btn-link:active,
 .btn.btn-link.active {
-  color: #302ecd;
+  color: inherit;
 }
 
 .btn.btn-sm {
