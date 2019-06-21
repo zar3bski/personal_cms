@@ -6,6 +6,8 @@ from datetime import datetime
 from abc import abstractmethod
 from datetime import timedelta
 from django.conf import settings
+from django.db.models import Max
+from random import randint
 
 '''Tweaks and tricks'''
 def get_name(self):
@@ -109,6 +111,7 @@ class Article_category(Category):
 class Photo_category(Category):
     class Meta: 
         verbose_name_plural = "photo_categories"
+    visible_as_gallery = models.BooleanField(default=True)
 
 '''                               editorial models'''
 class Person(models.Model): 
@@ -140,11 +143,24 @@ class Post(models.Model):
     description     = models.TextField(max_length=300, help_text="markdown syntax", null=True, blank=True)
     first_published = models.DateField(auto_now_add=True)
 
+    @classmethod
+    def get_random_instances(cls, nb=1, cat_list=None): 
+        max_id = cls.objects.all().aggregate(max_id=Max("id"))['max_id']
+        items  = []
+        while len(items)<nb: 
+            pk  = randint(1, max_id)
+            item = cls.objects.filter(pk=pk).first()
+            if item:
+                if cat_list == None or item.category in cat_list: 
+                    items.append(item)
+        return items
+
 class Article(Post):
     category        = models.ForeignKey(Article_category, null=True, on_delete=models.SET_NULL)
     last_update     = models.DateField('date published')
     visible         = models.BooleanField(default=True)
     content         = models.TextField()
+    photo           = models.ImageField(upload_to='article_photo', null=True, blank=True)
     language        = models.CharField(max_length=2 ,choices=[("fr","French"),("en", "English"),("es", "Spanish")], default="en")
 
     def __str__(self):

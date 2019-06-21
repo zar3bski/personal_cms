@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.db.models import F, Max
+from django.db.models import F
 
 from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person, Skill
 from .forms import BrowseForm, CommentForm, AddPictureForm, MessageForm
@@ -15,27 +15,17 @@ from django.core.cache import cache
 from django.apps import apps
 
 from math import ceil
-from random import randint
-
 
 class Home(View):
     template     = loader.get_template("website/home.html")
     message_form = MessageForm 
-    
-    def _get_random_pic(self,max_id): 
-        while True: 
-            pk  = randint(1, max_id)
-            pic = Photo.objects.filter(pk=pk).first()
-            if pic:
-                return pic
 
     def get(self, request):
         settings = cache.get('SiteSetting')
         context = {"message_form": self.message_form} 
 
         if settings.display_carousel:
-            max_id = Photo.objects.all().aggregate(max_id=Max("id"))['max_id']
-            context["photos"] = [self._get_random_pic(max_id) for i in range(5)] 
+            context["photos"] = Photo.get_random_instances(5)
 
         if settings.display_skills:
             context["skills"] = Skill.objects.all()
@@ -82,8 +72,11 @@ class Reader(View):
         article.save()
         article.refresh_from_db()
 
+        article_root = cache.get('Article_category').filter(path__startswith=article.category.path.split("->")[0])
+        suggestions  = Article.get_random_instances(2,article_root)
+        
         comments     = Comment.objects.select_related('article').filter(article_id=article_id)
-        context      = {"article":article, "comment_form":self.comment_form, "comments":comments}
+        context      = {"article":article, "comment_form":self.comment_form, "comments":comments, "suggestions":suggestions}
         return HttpResponse(self.template.render(context, request))
 
     def post(self, request, path, article_id): 

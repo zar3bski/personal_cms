@@ -122,6 +122,7 @@
     bio: |
       Vide, quantum, inquam, fallare, Torquate. oratio me istius philosophi non offendit; nam et complectitur verbis, quod vult, et dicit plane, quod intellegam; et tamen ego a philosopho, si afferat eloquentiam, non asperner, si non habeat, non admodum flagitem. re mihi non aeque satisfacit, et quidem locis pluribus. sed quot homines, tot sententiae; falli igitur possumus.
       Siquis enim militarium vel honoratorum aut [nobilis](https://stabofficial.bandcamp.com/releases) inter suos rumore tenus esset insimulatus fovisse partes hostiles, iniecto onere catenarum in modum beluae trahebatur et inimico urgente vel nullo, quasi sufficiente hoc solo, quod nominatus esset aut delatus aut postulatus, capite vel multatione bonorum aut insulari solitudine damnabatur.
+
 - model: website.person
   pk: 2
   fields:
@@ -138,6 +139,7 @@
   fields:
     first_name: Louis
     last_name: Lumière
+
 - model: website.article_category
   pk: 1
   fields:
@@ -156,6 +158,7 @@
     parent: 2
     name: Django
     path: code->python->django
+
 - model: website.photo_category
   pk: 1
   fields:
@@ -168,6 +171,7 @@
     parent: NULL
     name: Portrait
     path: portrait
+
 - model: website.photo
   pk: 1
   fields:
@@ -252,6 +256,7 @@
     place_name: Lyon, FR
     nb_views: 22
     rating: 8
+
 - model: website.skill
   pk: 1
   fields:
@@ -292,10 +297,12 @@
   fields:
     name: Apache
     mastery: 50
+    
 - model: website.article
   pk: 1
   fields:
     category: 2
+    photo: article_photo/code.jpg
     title: Circa hos dies Lollianus primae lanuginis adulescens
     first_published: 2019-05-03
     last_update: 2019-05-06
@@ -325,6 +332,7 @@
   pk: 2
   fields:
     category: 3
+    photo: article_photo/python.png
     title: Alios autem dicere aiunt multo etiam inhumanius
     first_published: 2018-05-03
     last_update: 2019-03-06
