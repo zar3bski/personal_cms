@@ -73,7 +73,7 @@ class Reader(View):
         article.refresh_from_db()
 
         article_root = cache.get('Article_category').filter(path__startswith=article.category.path.split("->")[0])
-        suggestions  = Article.get_random_instances(2,article_root)
+        suggestions  = Article.get_random_instances(3,article_root)
         
         comments     = Comment.objects.select_related('article').filter(article_id=article_id)
         context      = {"article":article, "comment_form":self.comment_form, "comments":comments, "suggestions":suggestions}
@@ -107,7 +107,7 @@ class Timeline(View):
 
 class Gallery(View): 
     template = loader.get_template("website/gallery.html")
-    picture_form = AddPictureForm
+    picture_form = AddPictureForm 
 
     @method_decorator(parse_q_args)
     def get(self,request, super_category, page=1):

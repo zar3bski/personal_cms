@@ -4,6 +4,7 @@
 
 {% block content %}
 {% load markdown_extras %}
+{% load thumbnail %}
 
 <div>
 	<div class="flex-centered">
@@ -32,16 +33,31 @@
 			<div class="hide-sm"><img src="{{ MEDIA_URL }}/{{article.photo}}" class="img-responsive"></div>
 
 			<div class="panel">
-				<form action="/thumb_up/article/{{article.id}}/" method="post">
-					<button class="btn tooltip tooltip-left btn-action s-circle" data-tooltip="Like this article" type="submit" name="upvote" value="yes">
-						{% csrf_token %}
-						<img src="{% static 'website/img/thumb_big.png' %}" height="24">
-					</button>	
-				</form>
-				{% for s in suggestions %}
-					{{s.title}}
-					<br>
-				{% endfor %}
+				<div class="p-centered">
+					<form action="/thumb_up/article/{{article.id}}/" method="post">
+						<button class="btn tooltip tooltip-left btn-action s-circle" data-tooltip="Like this article" type="submit" name="upvote" value="yes">
+							{% csrf_token %}
+							<img src="{% static 'website/img/thumb_big.png' %}" height="24">
+						</button>	
+					</form>
+				</div>
+
+				<div class="divider text-center" data-content="RELATED ARTICLES"></div>
+					<div class="d-inline">
+					{% for s in suggestions %}				
+						{% thumbnail s.photo "100x100" crop="center" as im %}
+							<div class="popover popover-bottom">
+								<a href="/read/{{s.category}}/{{s.id}}">
+									<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+								</a>
+								<div class="popover-container">
+									{{s.title}}
+								</div>
+							</div>
+						{% endthumbnail %}	
+						&nbsp;
+					{% endfor %}
+					</div>
 			</div>
 		</div>
 	</div>
