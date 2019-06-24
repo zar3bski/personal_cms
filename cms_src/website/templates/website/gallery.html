@@ -12,17 +12,19 @@
 			{%with begin=c|multiply:settings.gallery_width|stringformat:"s" end=c|multiply:settings.gallery_width|add:settings.gallery_width|stringformat:"s"%}
 				{% with photo_slice=begin|add:":"|add:end %}
 					{% for p in photos|slice:photo_slice %}
-						<div class="card">
+						<div class="card" vocab="http://schema.org/" typeof="Photograph">
+							<span property="isFamilyFriendly" hidden>{{p.family_friendly}}</span>
+							<span property="genre" hidden>{{settings.url}}/gallery/{{p.category}}/</span>
 							<div class="card-header">
 								<div class="card-title h5">
-									{{p.title}}
+									<span property="name">{{p.title}}</span>
 									<div class="float-right">
 										{%if p.description is not None or p.buy_link is not None%}
 											<div class="popover popover-left">
 												<button class="btn"><i class="icon icon-plus"></i></button>
 												<div class="popover-container">
 													<div class="card">
-														{{p.description|default_if_none:""}}
+														<span property="description">{{p.description|default_if_none:""}}</span>
 														{% if p.buy_link is not None %}
 															<a href="{{p.buy_link}}">
 																<button class="btn btn-link">
@@ -38,34 +40,46 @@
 								</div>
 							</div>
 							<div class="card-image">
-								<img src="{{ MEDIA_URL }}/{{p.photo}}" class="img-responsive">
+								<img src="{{ MEDIA_URL }}/{{p.photo}}" class="img-responsive" property="url">
 							</div>
 							<div class="card-body">
 								<img src="{% static 'website/img/eye.png' %}" height="16">{{p.nb_views}}
 								{%if p.author is not None%}
 									<img src="{% static 'website/img/photo.png' %}" height="16">
-									{%if p.author.url is not None%}
-										<a href="{{p.author.url}}">{{p.author}}</a>
-									{% else %}
-										{{p.author}}
-									{% endif %}
+									<div property="author" typeof='Person'>
+										{%if p.author.url is not None%}	
+											<a href="{{p.author.url}}" property="url">
+												<span property="name">{{p.author}}</span>
+											</a>	
+										{% else %}
+											<span property="name">{{p.author}}</span>
+										{% endif %}
+									</div>
 								{%endif%}
 								{% for per in p.photo_models.all %}
-									<img src="{% static 'website/img/person.png' %}" height="16">
-									{% if per.url is not None%}
-										<a href="{{per.url}}">{{per}}</a> 
-									{% else %}
-										{{per}}
-									{%endif%}
+									<div property="contributor" typeof='Person'>
+										<img src="{% static 'website/img/person.png' %}" height="16">
+										{% if per.url is not None%}
+											<a href="{{per.url}}" property="url">
+												<span property="name">{{per}}
+												</span>
+											</a> 
+										{% else %}
+											<span property="name">{{per}}</span>
+										{%endif%}
+									</div>
 								{% endfor %}
 								{%if p.place_name is not None%}
-									<img src="{% static 'website/img/place.png' %}" height="16">{{p.place_name}}
+									<img src="{% static 'website/img/place.png' %}" height="16"><span property="spatialCoverage">{{p.place_name}}</span>
 								{%endif%}
   							</div>
   							<div class="card-footer">
-  								{% for t in p.tags %}
-									<span class="chip">{{t}}</span>
-								{% endfor %}
+  								<span property="keywords">
+	  								{% for t in p.tags %}
+										<span class="chip">{{t}}</span>
+										<span hidden>,</span>
+									{% endfor %}
+								</span>
   							</div>
 
 						</div>
