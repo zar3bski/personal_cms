@@ -7,14 +7,22 @@
 {% load thumbnail %}
 
 <div vocab="http://schema.org/" typeof="Article">
-	<span property="author" hidden>{{article.author}}</span>
+	<!--SEO___________________________-->
+	<div property="author" typeof="Person">
+		<span property="name" hidden>
+			{{article.author}}
+		</span>
+		<span property="url" hidden>
+			{{article.author.url}}
+		</span>
+	</div>
 	<span property="isAccessibleForFree" hidden>True</span>
 	<span property="inLanguage" hidden>{{article.language}}</span>
 	<span property="keywords" hidden>{{article.tags}}</span>
 	<span property="isFamilyFriendly" hidden>{{article.family_friendly}}</span>
 	<span property="description" hidden>{{article.description}}</span>
 	<span property="accessModeSufficient" hidden>textual,visual</span>
-	<span property="identifier" hidden>{{settings.url}}/read/{{article.category}}/{{article.id}}</span>
+	<span property="url" hidden>{{settings.url}}/read/{{article.category}}/{{article.id}}</span>
 	<span property="genre" hidden>{{settings.url}}/read/{{article.category}}/</span>
 
 	<div class="flex-centered">

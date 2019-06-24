@@ -25,9 +25,18 @@
 	<div class="column col-md-12">	
 		{% for a in articles %}
 			<div class="card" vocab="http://schema.org/" typeof="Article">
+				<!--SEO___________________________-->
 				<span property="identifier" hidden>{{settings.url}}/read/{{a.category}}/{{a.id}}</span>
-				<span property="author" hidden>{{a.author}}</span>
+				<div property="author" typeof="Person">
+					<span property="name" hidden>
+						{{a.author}}
+					</span>
+					<span property="url" hidden>
+						{{a.author.url}}
+					</span>
+				</div>
 				<span property="isAccessibleForFree" hidden>True</span>
+
 				<div class="columns">
 					<div class="column col-9 col-md-12">
 						<div class="card-header">
