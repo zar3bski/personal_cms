@@ -41,7 +41,7 @@ class SiteSetting(SingletonModel):
     display_bio       = models.BooleanField(default=True)
     display_skills    = models.BooleanField(default=True)
     display_carousel  = models.BooleanField(default=True)
-    footer            = models.CharField(max_length=200,null=True, blank=True, help_text="markdown syntax")
+    footer            = models.TextField(max_length=200,null=True, blank=True, help_text="markdown syntax")
     gallery_width     = models.PositiveSmallIntegerField(default=3, validators=[
                 MinValueValidator(2), 
                 MaxValueValidator(5)])
