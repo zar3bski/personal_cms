@@ -139,7 +139,7 @@ class Post(models.Model):
     rating          = models.PositiveSmallIntegerField(default=0, editable=False)
     nb_views        = models.PositiveIntegerField(default=0, editable=False)
     tags            = models.CharField(max_length=100, help_text="comma separated tags")
-    adult_only      = models.BooleanField(default=False)
+    family_friendly = models.BooleanField(default=True)
     description     = models.TextField(max_length=300, help_text="markdown syntax", null=True, blank=True)
     first_published = models.DateField(auto_now_add=True)
 
