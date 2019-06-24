@@ -21,14 +21,14 @@ class BrowseForm(forms.Form):
 class AddPictureForm(ModelForm):
 	class Meta: 
 		model   = Photo
-		fields  = ["title","author","tags","adult_only","description","photo_models","place_name","buy_link","photo"]
+		fields  = ["title","author","tags","family_friendly","description","photo_models","place_name","buy_link","photo"]
 		labels  = {k:"" for k in fields}
 	def __init__(self, *args, **kwargs): 
 		super().__init__(*args, **kwargs)
 		self.fields["title"].widget.attrs.update({'placeholder': 'Title', "class":"form-input"})
 		self.fields["author"].widget.attrs.update({"class":"form-select"})
 		self.fields["tags"].widget.attrs.update({'placeholder': 'Tags (, separated)', "class":"form-input"})
-		self.fields["adult_only"].widget.attrs.update({"class":"form-switch"})
+		self.fields["family_friendly"].widget.attrs.update({"class":"form-switch"})
 		self.fields["description"].widget.attrs.update({'placeholder': 'Description', "class":"form-input"})
 		self.fields["photo_models"].widget.attrs.update({"class":"form-select"})
 		self.fields["place_name"].widget.attrs.update({'placeholder': 'Place Name', "class":"form-input"})
