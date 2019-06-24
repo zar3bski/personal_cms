@@ -24,15 +24,18 @@
 <div class="columns">
 	<div class="column col-md-12">	
 		{% for a in articles %}
-			<div class="card">
+			<div class="card" vocab="http://schema.org/" typeof="Article">
+				<span property="identifier" hidden>{{settings.url}}/read/{{a.category}}/{{a.id}}</span>
+				<span property="author" hidden>{{a.author}}</span>
+				<span property="isAccessibleForFree" hidden>True</span>
 				<div class="columns">
 					<div class="column col-9 col-md-12">
 						<div class="card-header">
-							<div class="card-title h5">{{a.title}}</div>
+							<div class="card-title h5" property="name">{{a.title}}</div>
 							<div class="text-right"> 
 								{% load static %} 
 								<img src="{% static 'website/img/calendar.png' %}" height="12">
-								{{a.last_update}}
+								<span property="dateModified">{{a.last_update}}</span>
 							</div>
 							<div class="card-subtitle text-gray">{{a.category}}</div>
 						</div>
@@ -51,13 +54,16 @@
 				</div>
 				<div class="columns">
 					<div class="column col-12">
-						<div class="card-footer">
-							{% for t in a.tags %}
-								<span class="chip">{{t}}</span>
-							{% endfor %}
+						<div class="card-footer" >
+							<span property="keywords">
+								{% for t in a.tags %}
+									<span class="chip" >{{t}}</span>
+									<span hidden>,</span>
+								{% endfor %}
+							</span>
 							
 							{% load static %}
-							<img src="{% static 'website/img/globe.png' %}" height="16">{{a.language}}
+							<img src="{% static 'website/img/globe.png' %}" height="16"><span property="inLanguage">{{a.language}}</span>
 							<img src="{% static 'website/img/thumb.png' %}" height="16">{{a.rating}}
 							<div class="text-right">
 								<a href="/read/{{a.category}}/{{a.id}}" lang="{{a.language}}" hreflang="{{a.language}}">
