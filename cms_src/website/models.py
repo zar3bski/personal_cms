@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection
 from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -26,6 +26,10 @@ class SingletonModel(models.Model):
 
     @classmethod
     def load(cls):
+        if cls.objects.first() == None:
+            data = {str(k).split('.')[-1]: k.get_default() for k in cls._meta.fields}
+            s = cls(data)
+            s.save()
         cache.set('{}'.format(cls.__name__), cls.objects.first(), None)
 
 '''                               MODELS'''
@@ -34,13 +38,13 @@ class SiteSetting(SingletonModel):
     about             = models.TextField(null=True, blank=True)
     keywords          = models.CharField(max_length=120, help_text="comma separated tags", null=True)
     url               = models.URLField(max_length=200, null=True, blank=True)
-    profil_image      = models.ImageField(null=True, upload_to='photo')
+    profil_image      = models.ImageField(null=True, upload_to='photo', default="photo/profile_placeholder.png")
     owner_first_name  = models.CharField(max_length=100,default='my_first_name')
     owner_last_name   = models.CharField(max_length=100,default='my_last_name')
     bio               = models.TextField(max_length=800, help_text="markdown syntax", null=True, blank=True)
-    display_bio       = models.BooleanField(default=True)
-    display_skills    = models.BooleanField(default=True)
-    display_carousel  = models.BooleanField(default=True)
+    display_bio       = models.BooleanField(default=False)
+    display_skills    = models.BooleanField(default=False)
+    display_carousel  = models.BooleanField(default=False)
     footer            = models.TextField(max_length=200,null=True, blank=True, help_text="markdown syntax")
     gallery_width     = models.PositiveSmallIntegerField(default=3, validators=[
                 MinValueValidator(2), 
@@ -49,13 +53,13 @@ class SiteSetting(SingletonModel):
                 MinValueValidator(4), 
                 MaxValueValidator(30)],
                 help_text='number of items by gallery page')
-    show_gallery        = models.BooleanField(default=True)
-    show_articles       = models.BooleanField(default=True)
-    show_projects       = models.BooleanField(default=True)
-    show_education      = models.BooleanField(default=True)
-    show_publications   = models.BooleanField(default=True)
-    show_jobs           = models.BooleanField(default=True)
-    show_certifications = models.BooleanField(default=True)
+    show_gallery        = models.BooleanField(default=False)
+    show_articles       = models.BooleanField(default=False)
+    show_projects       = models.BooleanField(default=False)
+    show_education      = models.BooleanField(default=False)
+    show_publications   = models.BooleanField(default=False)
+    show_jobs           = models.BooleanField(default=False)
+    show_certifications = models.BooleanField(default=False)
 
 class UserDesign(SingletonModel): 
     name   = models.CharField(max_length=255, default="default")
@@ -145,7 +149,7 @@ class Post(models.Model):
 
     @classmethod
     def get_random_instances(cls, nb=1, cat_list=None): 
-        max_id = cls.objects.all().aggregate(max_id=Max("id"))['max_id']
+        max_id = cls.objects.all().aggregate(max_id=Max("id"))['max_id'] or 1
         items  = []
         while len(items)<nb: 
             pk  = randint(1, max_id)

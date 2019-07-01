@@ -1,14 +1,17 @@
 #!/bin/sh
 
-if [ "$DATABASE" = "mysql" ]
+if [ "$DATABASE" = "mariadb" ]
 then
-    echo "Waiting for mysql..."
+    echo "Waiting for mariadb..."
 
     while ! nc -z $SQL_HOST $SQL_PORT; do
       sleep 0.1
     done
 
-    echo "MySql started"
+    echo "MariaDB started"
 fi
+
+python manage.py migrate
+python manage.py collectstatic --no-input --clear
 
 exec "$@"

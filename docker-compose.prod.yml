@@ -3,24 +3,40 @@ version: '3.7'
 services:
   web:
     restart: always
+    container_name: "cms_${INSTANCE_NAME}_web"
     build:
       context: ./cms_src
       dockerfile: Dockerfile.prod
     command: gunicorn personal_cms.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - ${STATIC_FILES_HOST}:/usr/src/cms/staticfiles
-    ports:
-      - 127.0.0.1:8000:8000
+      - static_volume:/usr/src/cms/staticfiles
+      - media_volume:/usr/src/cms/media
+    expose:
+      - 8000
     env_file: .env
     depends_on:
       - db
   db:
     restart: always
-    image: mariadb
+    container_name: "cms_${INSTANCE_NAME}_db"
+    image: mariadb:10.4.5
     volumes:
       - postgres_data:/var/lib/mariadb/data/
     env_file: .env.db
+  nginx:
+    restart: always
+    build: ./nginx
+    container_name: "cms_${INSTANCE_NAME}_nginx"
+    volumes:
+      - static_volume:/usr/src/app/staticfiles
+      - media_volume:/usr/src/cms/media
+    ports:
+      - ${NGINX_PORT}:80
+    env_file: .env
+    depends_on:
+      - web
 
 volumes:
   postgres_data:
   static_volume: 
+  media_volume:
