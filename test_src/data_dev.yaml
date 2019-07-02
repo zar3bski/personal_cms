@@ -118,6 +118,16 @@
     profil_image: photo/Red_Panda_Simon_01.jpg
     about: Blog about photograpy, philosophy and code
     keywords: code,python,django
+    display_bio: True
+    display_skills: True
+    display_carousel: True
+    show_gallery: True
+    show_articles: True
+    show_projects: True
+    show_education: True
+    show_publications: True
+    show_jobs: True
+    show_certifications: True
     owner_last_name: Doe
     bio: |
       Vide, quantum, inquam, fallare, Torquate. oratio me istius philosophi non offendit; nam et complectitur verbis, quod vult, et dicit plane, quod intellegam; et tamen ego a philosopho, si afferat eloquentiam, non asperner, si non habeat, non admodum flagitem. re mihi non aeque satisfacit, et quidem locis pluribus. sed quot homines, tot sententiae; falli igitur possumus.
