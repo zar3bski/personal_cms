@@ -170,6 +170,7 @@ class Post(models.Model):
                     items.append(item)
         return items
 
+# TODO: categories should be many to many relations
 class Article(Post):
     category        = models.ForeignKey(Article_category, null=True, on_delete=models.SET_NULL)
     last_update     = models.DateField('date published')
@@ -180,7 +181,8 @@ class Article(Post):
 
     def __str__(self):
         return self.title
-
+        
+# TODO: categories should be many to many relations
 class Photo(Post):
     category     = models.ForeignKey(Photo_category, null=True, on_delete=models.SET_NULL)
     photo_models = models.ManyToManyField(Person, related_name="models", blank=True)
