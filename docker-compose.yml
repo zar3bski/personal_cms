@@ -10,6 +10,7 @@ services:
     volumes:
       - ./cms_src/:/usr/src/cms/
       - ./test_src/:/usr/src/test/
+      - ./test_src/fixtures/:/usr/src/cms/website/fixtures/
       - ./test_src/media/:/usr/src/cms/media/
     ports:
       - 8000:8000
