@@ -17,7 +17,7 @@ from django.apps import apps
 from django.views.generic.list import ListView
 
 from math import ceil
-
+ 
 class Home(View):
     template     = loader.get_template("website/home.html")
     message_form = MessageForm 

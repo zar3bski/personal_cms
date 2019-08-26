@@ -3,7 +3,7 @@
 {% block title %}Home--{{settings.title}}{% endblock %}
 
 {% block content %}
-{% load markdown_extras %}
+{% load markdownify %}
 <h2>Projects</h2>
 <div class="column col-8 col-mx-auto col-sm-12">
 	{%for p in object_list%}

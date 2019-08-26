@@ -175,7 +175,7 @@ class Article(Post):
     category        = models.ForeignKey(Article_category, null=True, on_delete=models.SET_NULL)
     last_update     = models.DateField('date published')
     visible         = models.BooleanField(default=True)
-    content         = models.TextField()
+    content         = models.TextField(help_text="markdown syntax. You can enable syntax highlighting in your fenced code by adding the typical extention of the language (e.g. ```py for python syntax)")
     photo           = models.ImageField(upload_to='article_photo', null=True, blank=True)
     language        = models.CharField(max_length=2 ,choices=[("fr","French"),("en", "English"),("es", "Spanish")], default="en")
 
