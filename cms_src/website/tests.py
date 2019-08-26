@@ -120,6 +120,17 @@ class TestArticleModel(TestCase):
 			tags="a, duplicate", 
 			content= "someting").save()
 
+	def test_random_retrieval_by_category(self): 
+		query = Article.get_random_instances(2, Article_category.objects.filter(path__startswith="code"))
+		self.assertFalse(Article.objects.get(pk=3) in query)
+		self.assertTrue(len(query)==2)
+		self.assertIsInstance(query[0], Article)
+		self.assertIsInstance(query[1], Article) 
+
+	def test_random_retrieval_any(self): 
+		query = Article.get_random_instances(1)
+		self.assertIsInstance(query[0], Article) 
+
 class TestPhotoModel(TestCase): 
 	fixtures = ["photo_categories.yaml", "photo-1.yaml", "person-1.yaml"]
 
@@ -131,3 +142,13 @@ class TestPhotoModel(TestCase):
 			first_published= "2018-08-15",
 			author=author,
 			photo= "photo/img6.jpg").save()
+
+	def test_random_retrieval_by_category(self): 
+		query = Photo.get_random_instances(1, Photo_category.objects.filter(path__startswith="landscape"))
+		self.assertFalse(Photo.objects.get(pk=2) in query)
+		self.assertIsInstance(query[0], Photo)
+
+	def test_random_retrieval_any(self): 
+		query = Photo.get_random_instances(1)
+		self.assertIsInstance(query[0], Photo)
+		
