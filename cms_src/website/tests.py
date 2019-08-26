@@ -2,13 +2,13 @@ from django.test import RequestFactory, TestCase, Client
 from django.core.cache import cache
 from django.db.utils import IntegrityError
 
-from .models import Article_category, Photo_category, Article
+from .models import Article_category, Photo_category, Article, Person, Photo
 from .views import Browse, Home
 
 # TODO: integrate the following command in future CI pipeline : docker exec personal_cms_web_1 python manage.py test website
 
 class TestCache(TestCase): 
-	fixtures = ["config-1.yaml", "picture_categories.yaml", "article_categories.yaml", "external_accounts.yaml"]
+	fixtures = ["config-1.yaml", "photo_categories.yaml", "article_categories.yaml", "external_accounts.yaml"]
 		
 	def test_cached_settings(self):
 		self.assertTrue(cache.get('SiteSetting').show_projects == True)
@@ -60,8 +60,7 @@ class TestBrowseArticles(TestCase):
 		self.assertTrue(len(context["articles"])==2)
 		self.assertTrue(Article.objects.get(pk=1) in context["articles"])
 		self.assertTrue(Article.objects.get(pk=2) in context["articles"])
-		self.assertTrue(Article.objects.get(pk=3) not in context["articles"])
-		
+		self.assertTrue(Article.objects.get(pk=3) not in context["articles"])	
 
 #class TestViewHome(TestCase):
 #	fixtures = ["config-1.yaml", "picture_categories.yaml", "article_categories.yaml", "external_accounts.yaml"] 
@@ -77,7 +76,7 @@ class TestBrowseArticles(TestCase):
 '''MODEL TESTING'''
 
 class TestCategoryModel(TestCase): 
-	fixtures = ["picture_categories.yaml", "article_categories.yaml"]
+	fixtures = ["photo_categories.yaml", "article_categories.yaml"]
 
 	def test_category_creation(self): 
 		x = Article_category.objects.create(parent=Article_category.objects.get(pk=1), name="DevOps")
@@ -106,3 +105,29 @@ class TestCategoryModel(TestCase):
 		x = Article_category.objects.create(parent=None, name="News").save()
 		y = Article_category.objects.create(parent=Article_category.objects.get(pk=1), name="News").save()
 
+class TestArticleModel(TestCase): 
+	fixtures = ["article_categories.yaml", "article-1.yaml", "person-1.yaml"]
+
+	def test_unicity(self): 
+		'''It sould be impossible for the same author to have two articles with the same name'''
+		with self.assertRaises(IntegrityError):
+			author = Person.objects.get(pk=1)
+			Article.objects.create(title="Circa hos dies Lollianus primae lanuginis adulescens", 
+			first_published= "2018-08-15",
+			last_update = "2018-08-16",
+			language="en",
+			author=author,
+			tags="a, duplicate", 
+			content= "someting").save()
+
+class TestPhotoModel(TestCase): 
+	fixtures = ["photo_categories.yaml", "photo-1.yaml", "person-1.yaml"]
+
+	def test_unicity(self): 
+		'''It sould be impossible for the same author to have two pictures with the same title'''
+		with self.assertRaises(IntegrityError):
+			author = Person.objects.get(pk=1)
+			Photo.objects.create(title="Hobbitebourg", 
+			first_published= "2018-08-15",
+			author=author,
+			photo= "photo/img6.jpg").save()

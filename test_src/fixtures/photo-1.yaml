@@ -1,0 +1,25 @@
+- model: website.photo
+  pk: 1
+  fields:
+    category: 1
+    title: Hobbitebourg
+    author: 1
+    first_published: 2019-05-03
+    photo: photo/img5.jpg
+    tags: chill, third age 
+    place_name: Hobbitebourg, The Shire
+    nb_views: 20
+    rating: 1
+- model: website.photo
+  pk: 2
+  fields:
+    category: 2
+    title: Georges Méliès
+    author: 2
+    photo_models: 
+      - 1
+    first_published: 2018-05-03
+    photo: photo/img6.jpg
+    tags: old 
+    nb_views: 5
+    rating: 1

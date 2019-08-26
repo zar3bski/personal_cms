@@ -4,3 +4,9 @@
     first_name: Georges
     last_name: Méliès
     url: https://en.wikipedia.org/wiki/Georges_M%C3%A9li%C3%A8s
+- model: website.person
+  pk: 2
+  fields:
+    first_name: Jack
+    last_name: the Ripper
+    url: https://fr.wikipedia.org/wiki/Jack_the_Ripper

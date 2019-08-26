@@ -118,10 +118,10 @@ class Article_category(Category):
         verbose_name_plural = "article_categories"
 
 class Photo_category(Category):
-    class Meta: 
+    class Meta:
         constraints = [
             models.UniqueConstraint(fields=['parent','name'], name='unique')
-        ]
+        ] 
         verbose_name_plural = "photo_categories"
     visible_as_gallery = models.BooleanField(default=True)
 
@@ -143,8 +143,11 @@ class Post(models.Model):
         abstract        = True
         indexes         = [
             models.Index(fields=['category', 'nb_views', 'rating'])
+        ] 
+        constraints = [
+            models.UniqueConstraint(fields=['title','author'], name='unique')
         ]
-        unique_together = [['title', 'author']]
+
 
     title           = models.CharField(max_length=100)
     author          = models.ForeignKey(Person, null=True, on_delete=models.SET_NULL)
