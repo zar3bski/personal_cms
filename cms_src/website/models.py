@@ -1,5 +1,6 @@
 from django.db import models, connection
 from django.core.cache import cache
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import datetime
@@ -83,7 +84,6 @@ class ExternalAccount(models.Model):
 class Category(models.Model):
     class Meta: 
         abstract = True
-        unique_together = [['name','parent']] 
 
     parent = models.ForeignKey('self', null=True, blank=True, related_name='nested_category', on_delete=models.SET_NULL)
     name   = models.CharField(max_length=50)
@@ -93,8 +93,9 @@ class Category(models.Model):
     @abstractmethod
     def save(self, *args, **kwargs):
         self.path = str(self)
-        super(Category, self).save(*args, **kwargs)  
-    
+        
+        super(Category, self).save(*args, **kwargs) 
+
     @abstractmethod
     def __str__(self):                           
         full_path = [self.name.lower()]                                        
@@ -104,16 +105,23 @@ class Category(models.Model):
             k = k.parent
 
         return '->'.join(full_path[::-1])
+
     @classmethod
     def load(cls):
         cache.set('{}'.format(cls.__name__), cls.objects.all(), None)
 
 class Article_category(Category):
-    class Meta: 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['parent','name'], name='unique')
+        ]
         verbose_name_plural = "article_categories"
 
 class Photo_category(Category):
     class Meta: 
+        constraints = [
+            models.UniqueConstraint(fields=['parent','name'], name='unique')
+        ]
         verbose_name_plural = "photo_categories"
     visible_as_gallery = models.BooleanField(default=True)
 
