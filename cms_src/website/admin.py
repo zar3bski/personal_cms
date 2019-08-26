@@ -32,5 +32,7 @@ admin.site.register(Person)
 admin.site.register(Skill)
 admin.site.register(Message)
 admin.site.register(ExternalAccount)
+admin.site.register(Project)
+admin.site.register(Job)
 
 admin.site.register(UserDesign, DesignFormAdmin)

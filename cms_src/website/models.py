@@ -260,7 +260,11 @@ class Job(Timeline):
 class Project(models.Model):
     name        = models.CharField(max_length=100)
     url         = models.URLField()
-    description = models.TextField()
+    description = models.TextField(help_text="markdown syntax")
+    image_url   = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Skill(models.Model): 
     name    = models.CharField(max_length=50)

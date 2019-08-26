@@ -7,12 +7,14 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 
-from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person, Skill
+from .models import SiteSetting, Diplome, Certification, Article, Article_category, Comment, Photo, Photo_category, Person, Skill, Project
 from .forms import BrowseForm, CommentForm, AddPictureForm, MessageForm
 from .decorators import parse_q_args
 from django.contrib import admin
 from django.core.cache import cache
 from django.apps import apps
+
+from django.views.generic.list import ListView
 
 from math import ceil
 
@@ -145,6 +147,9 @@ class Gallery(View):
             pic.save_m2m()
 
             return redirect(request.META['HTTP_REFERER'])
+
+class Project(ListView): 
+    model = Project
 
 def thumb_up(request, con_type, post_id): 
     form = request.POST

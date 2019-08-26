@@ -1,0 +1,18 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Home--{{settings.title}}{% endblock %}
+
+{% block content %}
+{% load markdown_extras %}
+<h2>Projects</h2>
+<div class="column col-8 col-mx-auto col-sm-12">
+	{%for p in object_list%}
+		<h3>> <a href={{p.url}}>{{p.name}}</a></h3>
+		{{ p.description | markdown | safe }}
+
+		{%if p.image_url%} <img src="{{p.image_url}}" class="img-responsive">{%endif%}
+
+		<div class="divider text-center"></div>
+	{%endfor%}
+</div>
+{% endblock %}
