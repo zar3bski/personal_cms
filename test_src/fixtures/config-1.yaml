@@ -1,0 +1,25 @@
+- model: website.sitesetting
+  pk: 1
+  fields:
+    title: My awsome site
+    owner_first_name: John
+    url: https://somewhere.overtherainbow.com
+    profil_image: photo/Red_Panda_Simon_01.jpg
+    about: Blog about photograpy, philosophy and code
+    keywords: code,python,django
+    display_bio: True
+    display_skills: True
+    display_carousel: True
+    show_gallery: True
+    show_articles: True
+    show_projects: True
+    show_education: True
+    show_publications: True
+    show_jobs: True
+    show_certifications: True
+    owner_last_name: Doe
+    bio: |
+      ## Biography
+      
+      Vide, quantum, inquam, fallare, Torquate. oratio me istius philosophi non offendit; nam et complectitur verbis, quod vult, et dicit plane, quod intellegam; et tamen ego a philosopho, si afferat eloquentiam, non asperner, si non habeat, non admodum flagitem. re mihi non aeque satisfacit, et quidem locis pluribus. sed quot homines, tot sententiae; falli igitur possumus.
+      Siquis enim militarium vel honoratorum aut [nobilis](https://stabofficial.bandcamp.com/releases) inter suos rumore tenus esset insimulatus fovisse partes hostiles, iniecto onere catenarum in modum beluae trahebatur et inimico urgente vel nullo, quasi sufficiente hoc solo, quod nominatus esset aut delatus aut postulatus, capite vel multatione bonorum aut insulari solitudine damnabatur.

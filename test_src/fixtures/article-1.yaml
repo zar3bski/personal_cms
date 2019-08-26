@@ -1,0 +1,77 @@
+- model: website.article
+  pk: 1
+  fields:
+    category: 2
+    photo: article_photo/code.jpg
+    title: Circa hos dies Lollianus primae lanuginis adulescens
+    first_published: 2019-05-03
+    last_update: 2019-05-06
+    language: fr
+    author: 1
+    tags: python, first, lorem, ipsum
+    content: |
+      Duplexque isdem diebus acciderat malum, quod et Theophilum insontem atrox interceperat casus, et [Serenianus](https://django.readthedocs.io/en/1.2.X/ref/templates/builtins.html) dignus exsecratione cunctorum, innoxius, modo non reclamante publico vigore, discessit.
+
+      Hac ita persuasione reducti intra moenia bellatores obseratis undique portarum aditibus, propugnaculis insistebant et pinnis, congesta undique saxa telaque habentes in promptu, ut si quis se proripuisset interius, multitudine missilium sterneretur et lapidum.
+
+      ```
+      def parse_q_args(function):
+        def wrap(request, *args, **kwargs):
+          if request.GET.urlencode() != "":
+            q_args = {q.split("=")[0]:q.split("=")[1] for q in request.GET.urlencode().split("&")}
+
+            for x in q_args.items(): 
+              kwargs[x[0]]=x[1]
+
+          return function(request, *args, **kwargs)
+        return wrap
+      ```
+
+      Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix interneciva aegre vestigia claritudinis pristinae monstrat admodum pauca.
+
+- model: website.article
+  pk: 2
+  fields:
+    category: 2
+    photo: article_photo/python.png
+    title: Alios autem dicere aiunt multo etiam inhumanius
+    first_published: 2018-05-03
+    last_update: 2019-03-06
+    language: en
+    author: 1
+    tags: django, second, lorem, ipsum
+    content: |
+      Duplexque isdem diebus acciderat malum, quod et Theophilum insontem atrox interceperat casus, et [Serenianus](https://django.readthedocs.io/en/1.2.X/ref/templates/builtins.html) dignus exsecratione cunctorum, innoxius, modo non reclamante publico vigore, discessit.
+
+      Hac ita persuasione reducti intra moenia bellatores obseratis undique portarum aditibus, propugnaculis insistebant et pinnis, congesta undique saxa telaque habentes in promptu, ut si quis se proripuisset interius, multitudine missilium sterneretur et lapidum.
+
+      ```
+      def parse_q_args(function):
+        def wrap(request, *args, **kwargs):
+          if request.GET.urlencode() != "":
+            q_args = {q.split("=")[0]:q.split("=")[1] for q in request.GET.urlencode().split("&")}
+
+            for x in q_args.items(): 
+              kwargs[x[0]]=x[1]
+
+          return function(request, *args, **kwargs)
+        return wrap
+      ```
+
+      Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix interneciva aegre vestigia claritudinis pristinae monstrat admodum pauca.
+
+- model: website.article
+  pk: 3
+  fields:
+    category: 3
+    photo: article_photo/travel.png
+    title: Isdem diebus Apollinaris Domitiani
+    first_published: 2017-05-03
+    last_update: 2017-06-06
+    language: en
+    author: 1
+    tags: travel, england
+    content: |
+      is igitur est difficilius satis facere, qui se Latina scripta dicunt contemnere. in quibus hoc primum est in quo admirer, cur in gravissimis rebus non delectet eos sermo patrius, cum idem fabellas Latinas ad verbum e Graecis expressas non inviti legant. quis enim tam inimicus paene nomini Romano est, qui Ennii Medeam aut Antiopam Pacuvii spernat aut reiciat, quod se isdem Euripidis fabulis delectari dicat, Latinas litteras oderit?
+
+      Quare hoc quidem praeceptum, cuiuscumque est, ad tollendam amicitiam valet; illud potius praecipiendum fuit, ut eam diligentiam adhiberemus in amicitiis comparandis, ut ne quando amare inciperemus eum, quem aliquando odisse possemus. Quin etiam si minus felices in diligendo fuissemus, ferendum id Scipio potius quam inimicitiarum tempus cogitandum putabat.

@@ -1,0 +1,18 @@
+- model: website.article_category
+  pk: 1
+  fields:
+    parent: NULL
+    name: Code
+    path: code
+- model: website.article_category
+  pk: 2
+  fields:
+    parent: 1
+    name: Python
+    path: code->python
+- model: website.article_category
+  pk: 3
+  fields:
+    parent: NULL
+    name: Travel
+    path: travel

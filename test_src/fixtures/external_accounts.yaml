@@ -1,0 +1,12 @@
+- model: website.externalaccount
+  pk: 1
+  fields: 
+    plateform_name: Facebook
+    url: https://youtu.be/oavMtUWDBTM
+    logo: logo/facebook.png
+- model: website.externalaccount
+  pk: 2
+  fields:
+    plateform_name: Github
+    url: https://youtu.be/oavMtUWDBTM
+    logo: logo/github.png

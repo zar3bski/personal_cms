@@ -1,0 +1,13 @@
+- model: website.photo_category
+  pk: 1
+  fields:
+    parent: NULL
+    name: Landscape
+    path: landscape
+
+- model: website.photo_category
+  pk: 2
+  fields:
+    parent: NULL
+    name: Portrait
+    path: portrait
