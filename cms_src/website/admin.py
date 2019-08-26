@@ -19,20 +19,23 @@ class DesignFormAdmin(admin.ModelAdmin):
     form = DesignForm
 
 
-#TODO: categorize to make navigation easier
+#names and order bypassed in settings.py
 admin.site.register(SiteSetting)
+admin.site.register(UserDesign, DesignFormAdmin)
+
 admin.site.register(Article_category)
 admin.site.register(Photo_category)
-admin.site.register(Diplome)
 admin.site.register(Article)
-admin.site.register(Certification)
-admin.site.register(Comment)
 admin.site.register(Photo)
+
+admin.site.register(Comment)
 admin.site.register(Person)
-admin.site.register(Skill)
 admin.site.register(Message)
+
+admin.site.register(Diplome)
+admin.site.register(Certification)
+admin.site.register(Skill)
 admin.site.register(ExternalAccount)
 admin.site.register(Project)
 admin.site.register(Job)
 
-admin.site.register(UserDesign, DesignFormAdmin)

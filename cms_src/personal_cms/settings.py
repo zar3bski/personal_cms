@@ -25,48 +25,50 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'o@@xO=jrd=p0^17svmYpw!22-bnm3zz*iy(7=
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-                                                                                
+
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'website.apps.WebsiteConfig',
-    'sorl.thumbnail',
+'django.contrib.admin',
+'django.contrib.auth',
+'django.contrib.contenttypes',
+'django.contrib.sessions',
+'django.contrib.messages',
+'django.contrib.staticfiles',
+'website.apps.WebsiteConfig',
+'sorl.thumbnail',
+'admin_reorder',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+'django.middleware.security.SecurityMiddleware',
+'django.contrib.sessions.middleware.SessionMiddleware',
+'django.middleware.common.CommonMiddleware',
+'django.middleware.csrf.CsrfViewMiddleware',
+'django.contrib.auth.middleware.AuthenticationMiddleware',
+'django.contrib.messages.middleware.MessageMiddleware',
+'django.middleware.clickjacking.XFrameOptionsMiddleware',
+'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 ROOT_URLCONF = 'personal_cms.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'website.context_processors.settings',
-                'django.template.context_processors.media',
-            ],
-        },
-    },
+{
+'BACKEND': 'django.template.backends.django.DjangoTemplates',
+'DIRS': [os.path.join(BASE_DIR, 'templates')],
+'APP_DIRS': True,
+'OPTIONS': {
+'context_processors': [
+'django.template.context_processors.debug',
+'django.template.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+'django.contrib.messages.context_processors.messages',
+'website.context_processors.settings',
+'django.template.context_processors.media',
+],
+},
+},
 ]
 
 WSGI_APPLICATION = 'personal_cms.wsgi.application'
@@ -76,14 +78,14 @@ WSGI_APPLICATION = 'personal_cms.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'USER': os.environ.get('SQL_USER', 'user'),
-        'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
-        'HOST': os.environ.get('SQL_HOST', 'localhost'),
-        'PORT': os.environ.get('SQL_PORT', '5432'),
-    }
+'default': {
+'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
+'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
+'USER': os.environ.get('SQL_USER', 'user'),
+'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
+'HOST': os.environ.get('SQL_HOST', 'localhost'),
+'PORT': os.environ.get('SQL_PORT', '5432'),
+}
 }
 
 
@@ -91,18 +93,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+{
+'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+},
 ]
 
 
@@ -134,3 +136,33 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 
 MEDIA_URL= "/media/"
+
+
+ADMIN_REORDER = (
+    # Keep original label and models
+    'sites',
+
+    # Rename app
+    {'app': 'auth', 'label': 'Authorisation'},
+
+    # Reorder app models
+    {'app': 'website', 'models': (
+        {'model': 'website.SiteSetting',      'label': 'SETTINGS -> SiteSettings'},
+        {'model': 'website.UserDesign',       'label': 'SETTINGS -> Tweak CSS'},
+        {'model': 'website.Article_category', 'label': 'POSTING  -> Article Categories'},
+        {'model': 'website.Article',          'label': 'POSTING  -> Articles'},
+        {'model': 'website.Photo_category',   'label': 'POSTING  -> Photo Categories'},
+        {'model': 'website.Photo',            'label': 'POSTING  -> Photos'},
+        {'model': 'website.Comment',          'label': 'SOCIAL   -> Comments'},
+        {'model': 'website.Message',          'label': 'SOCIAL   -> Inbox Messages'},
+        {'model': 'website.Person',           'label': 'SOCIAL   -> Mentionned Persons'},
+        {'model': 'website.Diplome',          'label': 'ABOUT ME -> Diplomes'},
+        {'model': 'website.Certification',    'label': 'ABOUT ME -> Certifications'},
+        {'model': 'website.Skill',            'label': 'ABOUT ME -> Skills'},
+        {'model': 'website.ExternalAccount',  'label': 'ABOUT ME -> External Accounts'},
+        {'model': 'website.Project',          'label': 'ABOUT ME -> Projects'},
+        {'model': 'website.Job',              'label': 'ABOUT ME -> Professional Experiences'},
+    )},
+
+)
+
