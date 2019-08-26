@@ -44,8 +44,7 @@ class Home(View):
 class Browse(View):
     template = loader.get_template("website/browse.html")
     
-    @method_decorator(parse_q_args) 
-    def get(self, request, super_category, order_mode="last_update", page=1):  
+    def _context_processor(self, super_category, order_mode, page):
         breadcrumb = super_category.split('->')
         begin, end = (int(page)-1)*5,(int(page)-1)*5+5
 
@@ -59,7 +58,12 @@ class Browse(View):
             a.tags    = a.tags.split(',')
             a.content = a.content[0:400]
 
-        context  = {"breadcrumb": breadcrumb, "articles": articles, "current_page": page, "max_page":max_page, "order_mode": order_mode}
+        return {"breadcrumb": breadcrumb, "articles": articles, "current_page": page, "max_page":max_page, "order_mode": order_mode}
+
+    @method_decorator(parse_q_args) 
+    def get(self, request, super_category, order_mode="last_update", page=1):  
+        
+        context  = self._context_processor(super_category, order_mode, page)
         return HttpResponse(self.template.render(context, request))
 
 class Reader(View):
