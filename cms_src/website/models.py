@@ -58,7 +58,6 @@ class SiteSetting(SingletonModel):
     show_articles       = models.BooleanField(default=False)
     show_projects       = models.BooleanField(default=False)
     show_education      = models.BooleanField(default=False)
-    show_publications   = models.BooleanField(default=False)
     show_jobs           = models.BooleanField(default=False)
     show_certifications = models.BooleanField(default=False)
 
@@ -129,7 +128,7 @@ class Photo_category(Category):
 class Person(models.Model): 
     first_name = models.CharField(max_length=50, help_text="first name OR pseudo")
     last_name  = models.CharField(max_length=50, null=True, blank=True)
-    url        = models.URLField(max_length=200, null=True, blank=True)
+    url        = models.URLField(max_length=200, null=True, blank=True, unique=True)
     town       = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
@@ -137,6 +136,9 @@ class Person(models.Model):
 
     class Meta:
         ordering = ['first_name']
+        constraints = [
+            models.UniqueConstraint(fields=['first_name','last_name'], name='unique_person')
+        ]
 
 class Post(models.Model): 
     class Meta:
@@ -216,13 +218,6 @@ class Message(models.Model):
 
     def __str__(self):
         return "{}: {}".format(self.author, self.subject)
-
-class Publication(models.Model):
-    date    = models.DateField('date published')
-    typeof  = models.CharField(max_length=20)
-    journal = models.CharField(max_length=100)
-    editor  = models.CharField(max_length=100)
-    link    = models.URLField(null=True)
 
 '''                               temporal models'''
 class Timeline(models.Model): 
