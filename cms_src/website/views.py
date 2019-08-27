@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -118,20 +118,24 @@ class Gallery(View):
     @method_decorator(parse_q_args)
     def get(self,request, super_category, page=1):
         settings = cache.get('SiteSetting')
-        item_range = settings.nb_page_gallery
-        
-        begin, end   = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range
-        category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
-        photos       = Photo.objects.select_related('category').filter(category__in=category_ids)[begin:end]
-        
-        total_items  = sum(c.count for c in category_ids)
-        max_page     = int(ceil(total_items / item_range))
+        if settings.show_gallery == True: 
+            item_range = settings.nb_page_gallery
+            
+            begin, end   = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range
+            category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
+            photos       = Photo.objects.select_related('category').filter(category__in=category_ids)[begin:end]
+            
+            total_items  = sum(c.count for c in category_ids)
+            max_page     = int(ceil(total_items / item_range))
 
-        for p in photos: 
-            p.tags   = p.tags.split(',')
+            for p in photos: 
+                p.tags   = p.tags.split(',')
 
-        context      = {"photos":photos, "picture_form": self.picture_form, "current_page": page, "max_page":max_page}
-        return HttpResponse(self.template.render(context, request))
+            context      = {"photos":photos, "picture_form": self.picture_form, "current_page": page, "max_page":max_page}
+            return HttpResponse(self.template.render(context, request))
+        
+        else: 
+            raise Http404()
 
     @method_decorator(login_required)
     def post(self,request, super_category):
@@ -148,7 +152,7 @@ class Gallery(View):
 
             return redirect(request.META['HTTP_REFERER'])
 
-class Project(ListView): 
+class Project(ListView):
     model = Project
 
 def thumb_up(request, con_type, post_id): 

@@ -12,9 +12,6 @@
         {% if settings.show_certifications == True %}
           <li class="menu-item"><a href="/timeline/Certification/">Certifications</a></li>
         {% endif %}
-        {% if settings.show_publications == True %}
-          <li class="menu-item"><a href="getting-started/custom.html">Publications</a></li>
-        {% endif %}
         {% if settings.show_projects == True %}
           <li class="menu-item"><a href="/projects/">Projects</a>
         {% endif %}
@@ -54,7 +51,7 @@
     </form>
   {% endif %}
 
-  {% if settings.show_articles %}
+  {% if settings.show_gallery %}
     <div class="divider text-center" data-content="GALERIES"></div>
     <ul class="menu menu-nav">
       {% for c in photo_categories%}
