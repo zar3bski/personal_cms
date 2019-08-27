@@ -2,8 +2,8 @@ from django.test import RequestFactory, TestCase, Client
 from django.core.cache import cache
 from django.db.utils import IntegrityError
 
-from .models import Article_category, Photo_category, Article, Person, Photo
-from .views import Browse, Home
+from .models import Article_category, Photo_category, Article, Person, Photo, SiteSetting
+from .views import Browse, Home, Project, Gallery
 
 # TODO: integrate the following command in future CI pipeline : docker exec personal_cms_web_1 python manage.py test website
 
@@ -46,10 +46,16 @@ def setup_view(view, request, *args, **kwargs):
     return view
 
 class TestBrowseArticles(TestCase): 
-	fixtures = ["article_categories.yaml", "person-1.yaml", "article-1.yaml"]
+	'''NB: categories nedeed for caching'''
+	fixtures = ["article_categories.yaml", "photo_categories.yaml", "person-1.yaml", "article-1.yaml"]
 
 	def setUp(self):
 		self.factory = RequestFactory()
+
+	def test_access(self):
+		c = Client()
+		response = c.get("/browse/code->python/last_update/")
+		self.assertEqual(response.status_code, 200)
 
 	def test_data_retieval(self): 
 		'''only articles under the browsed meta category and and children should be given'''
@@ -62,16 +68,44 @@ class TestBrowseArticles(TestCase):
 		self.assertTrue(Article.objects.get(pk=2) in context["articles"])
 		self.assertTrue(Article.objects.get(pk=3) not in context["articles"])	
 
-#class TestViewHome(TestCase):
-#	fixtures = ["config-1.yaml", "picture_categories.yaml", "article_categories.yaml", "external_accounts.yaml"] 
+# TODO
+class TestHomeView(TestCase):
+	pass
 
-#	def setUp(self): 
-#		self.factory = RequestFactory()
+class TestGalleryView(TestCase):
+	'''NB: categories nedeed for caching'''
+	fixtures = ["photo_categories.yaml", "article_categories.yaml", "photo-1.yaml", "person-1.yaml"]
 
-#	def test_biography_section(self): 
-#		request  = self.factory.get("/")
-#		response = Home.as_view()(request)
-#		print(response)
+	def test_access(self):
+		c = Client()
+		response = c.get("/gallery/Landscape/")
+		self.assertEqual(response.status_code, 200)
+
+	def test_access_when_gallery_deactivated(self): 
+		"""user should get a 404 when gallery is desactivated"""
+		SiteSetting.objects.create(title= "My awsome site", owner_first_name= "John", url= "https://somewhere.overtherainbow.com", profil_image= "photo/Red_Panda_Simon_01.jpg", about= "Blog about photograpy, philosophy and code", keywords="code,python,django", display_bio= True, display_skills= True, display_carousel= True, show_gallery=False, show_articles= True, show_projects= True, show_education= True, show_jobs= True, show_certifications= True, owner_last_name= "Doe").save()
+		c = Client()
+		response = c.get("/gallery/Landscape/")
+		self.assertEqual(response.status_code, 404)
+		
+
+class TestExperienceView(TestCase):
+	'''NB: categories nedeed for caching'''
+	fixtures = ["photo_categories.yaml", "article_categories.yaml", "job-1.yaml"]
+
+	def test_access(self):
+		c = Client()
+		response = c.get("/timeline/Job/")
+		self.assertEqual(response.status_code, 200)
+
+class TestEducationView(TestCase):
+	'''NB: categories nedeed for caching'''
+	fixtures = ["photo_categories.yaml", "article_categories.yaml", "diplome-1.yaml"]
+
+	def test_access(self):
+		c = Client()
+		response = c.get("/timeline/Diplome/")
+		self.assertEqual(response.status_code, 200)
 
 '''MODEL TESTING'''
 
@@ -151,4 +185,16 @@ class TestPhotoModel(TestCase):
 	def test_random_retrieval_any(self): 
 		query = Photo.get_random_instances(1)
 		self.assertIsInstance(query[0], Photo)
-		
+
+class TestPerson(TestCase): 
+	fixtures = ["person-1.yaml"]
+
+	def test_unicity_1(self):
+		'''first name / last name combination are unique.'''
+		with self.assertRaises(IntegrityError):
+			Person.objects.create(first_name="Jack", last_name="the Ripper").save()
+	
+	def test_unicity_2(self):
+		'''the same url cannot occur twice'''
+		with self.assertRaises(IntegrityError):
+			Person.objects.create(first_name="Mister", last_name="Nobody", url="https://fr.wikipedia.org/wiki/Jack_the_Ripper").save()
