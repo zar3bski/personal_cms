@@ -123,7 +123,6 @@
     show_articles: True
     show_projects: True
     show_education: True
-    show_publications: True
     show_jobs: True
     show_certifications: True
     owner_last_name: Doe
@@ -324,7 +323,7 @@
 
       Hac ita persuasione reducti intra moenia bellatores obseratis undique portarum aditibus, propugnaculis insistebant et pinnis, congesta undique saxa telaque habentes in promptu, ut si quis se proripuisset interius, multitudine missilium sterneretur et lapidum.
 
-      ```
+      ```py
       def parse_q_args(function):
         def wrap(request, *args, **kwargs):
           if request.GET.urlencode() != "":
@@ -354,7 +353,7 @@
 
       Hac ita persuasione reducti intra moenia bellatores obseratis undique portarum aditibus, propugnaculis insistebant et pinnis, congesta undique saxa telaque habentes in promptu, ut si quis se proripuisset interius, multitudine missilium sterneretur et lapidum.
 
-      ```
+      ```py
       def parse_q_args(function):
         def wrap(request, *args, **kwargs):
           if request.GET.urlencode() != "":
@@ -378,7 +377,6 @@
       Jengu is an ERP designed for Independent Health professional such as 
 
         * psychologist
-
         * physical therapist
 
       Jengu allow to keep track of patients, payment and is designed following a [client side encryption](https://en.wikipedia.org/wiki/Client-side_encryption) philosophy
