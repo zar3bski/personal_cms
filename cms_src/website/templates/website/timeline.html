@@ -32,8 +32,9 @@
                             {{t.institution}}
                         </a>
                         <br>
-                        
-                        {{ t.details | markdown | safe }}
+                        {%if t.details%}
+                            {{ t.details | markdown | safe }}
+                        {%endif%}
 
                         {%if t.expire %}
                             expire : {{t.expire}}
