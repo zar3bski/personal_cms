@@ -1,0 +1,24 @@
+- model: website.job
+  pk: 1
+  fields: 
+    year: 2018
+    title: Junior Developper 
+    duration: 365 0:00:00.000000
+    institution: Nowhere
+    link: https://youtu.be/oavMtUWDBTM
+    details: Expetendas haberet perstrinxi) opulenti [locum](https://youtu.be/oavMtUWDBTM) eo calamitosi inopes itaque praesidia quam quisque inhumanius
+- model: website.job
+  pk: 2
+  fields: 
+    year: 2015
+    title: Assistant Professor
+    duration: 789 0:00:00.000000
+    job_type: teaching
+    institution: Université Paris 1 Panthéon-Sorbonne
+    link: https://www.pantheonsorbonne.fr/accueil
+    details: |
+      courses:
+
+      * Sublimibus altera si 
+      * Roma summitatem altera homines 
+      * Virtus ut ad altera altera augeretur dum incrementis.

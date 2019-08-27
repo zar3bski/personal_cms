@@ -1,0 +1,21 @@
+- model: website.project
+  pk: 1
+  fields:
+    name: Jengu
+    url: https://github.com/zar3bski/jengu
+    description: |
+      Jengu is an ERP designed for Independent Health professional such as 
+
+        * psychologist
+        * physical therapist
+
+      Jengu allow to keep track of patients, payment and is designed following a [client side encryption](https://en.wikipedia.org/wiki/Client-side_encryption) philosophy
+
+- model: website.project
+  pk: 2
+  fields:
+    name: Hadoop Sandbox
+    url: https://github.com/zar3bski/hadoop-sandbox
+    image_url: https://raw.githubusercontent.com/zar3bski/hadoop-sandbox/master/supports/figures/stack.png
+    description: |
+      a working hadoop lightweight environment docker based environment including HDFS, Sqoop, Yarn, Hive and Hue.

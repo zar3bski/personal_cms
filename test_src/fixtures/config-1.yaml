@@ -14,7 +14,6 @@
     show_articles: True
     show_projects: True
     show_education: True
-    show_publications: True
     show_jobs: True
     show_certifications: True
     owner_last_name: Doe

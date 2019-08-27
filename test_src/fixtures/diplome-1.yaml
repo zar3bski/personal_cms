@@ -1,0 +1,22 @@
+- model: website.diplome
+  pk: 1
+  fields: 
+    year: 2019
+    title: PhD in Rocket Science
+    institution: M.I.T.
+    link: https://youtu.be/oavMtUWDBTM
+    details: Expetendas haberet perstrinxi) opulenti [locum](https://youtu.be/oavMtUWDBTM) eo calamitosi inopes itaque praesidia quam quisque inhumanius
+- model: website.diplome
+  pk: 3
+  fields: 
+    year: 2017
+    title: M.S. Baby Rocket Science
+    institution: Princeton
+    details: Sublimibus altera si Roma summitatem altera homines Virtus ut ad altera altera augeretur dum incrementis.
+- model: website.diplome
+  pk: 2
+  fields: 
+    year: 2018
+    title: Star dreamer
+    institution: SUNY
+    link: https://youtu.be/oavMtUWDBTM
