@@ -6,7 +6,6 @@ services:
     build: 
       context: ./cms_src
       dockerfile: Dockerfile
-    command: python /usr/src/cms/manage.py runserver 0.0.0.0:8000
     volumes:
       - ./cms_src/:/usr/src/cms/
       - ./test_src/:/usr/src/test/
@@ -17,25 +16,23 @@ services:
     environment:
       - DEBUG=1
       - SECRET_KEY='o@@xO=jrd=p0^17svmYpw!22-bnm3zz*%y(7=j+p*t%ei-4pi!'
-      - SQL_ENGINE=django.db.backends.mysql
+      - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=personal_cms_db
       - SQL_USER=personal_cms
       - SQL_PASSWORD=N0tTh3D3favlTpAssw0rd
       - SQL_HOST=db
-      - SQL_PORT=3306
-      - DATABASE=mariadb
+      - SQL_PORT=5432
     depends_on:
       - db
   db:
-    image: mariadb:10.4.5
+    image: postgres:10.5-alpine
     restart: always
     volumes:
-      - mariadb_data:/var/lib/mariadb/data/
+      - postgres_data:/var/lib/postgresql/data/
     environment:
-      - MYSQL_PASSWORD=N0tTh3D3favlTpAssw0rd
-      - MYSQL_DATABASE=personal_cms_db
-      - MYSQL_USER=personal_cms
-      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - POSTGRES_PASSWORD=N0tTh3D3favlTpAssw0rd
+      - POSTGRES_DB=personal_cms_db
+      - POSTGRES_USER=personal_cms
 
 volumes:
-  mariadb_data:
+  postgres_data:

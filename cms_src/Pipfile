@@ -8,7 +8,7 @@ pyyaml = "==5.1"
 
 [packages]
 django = "==2.2.2"
-mysqlclient = "==1.4.2.post1"
+mysqlclient = "==1.4.4"
 markdown = "==3.1.1"
 pillow = "==5.0.0"
 sorl-thumbnail = "==12.5.0"
@@ -16,6 +16,7 @@ gunicorn= "==19.9.0"
 django-modeladmin-reorder= "==0.3.1"
 mistune= "==0.8.4"
 Pygments= "==2.4.2"
+psycopg2= "==2.8.3"
 
 [requires]
 python_version = "3.7"

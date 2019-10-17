@@ -7,7 +7,6 @@ services:
     build:
       context: ./cms_src
       dockerfile: Dockerfile.prod
-    command: gunicorn personal_cms.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/usr/src/cms/staticfiles
       - media_volume:/usr/src/cms/media
@@ -19,10 +18,11 @@ services:
   db:
     restart: always
     container_name: "cms_${INSTANCE_NAME}_db"
-    image: mariadb:10.4.5
+    image: postgres:10.5-alpine
     volumes:
-      - postgres_data:/var/lib/mariadb/data/
+      - postgres_data:/var/lib/postgresql/data/
     env_file: .env.db
+
   nginx:
     restart: always
     build: ./nginx
