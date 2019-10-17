@@ -14,7 +14,7 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DEBUG=1
+      - DEBUG=0
       - SECRET_KEY='o@@xO=jrd=p0^17svmYpw!22-bnm3zz*%y(7=j+p*t%ei-4pi!'
       - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=personal_cms_db

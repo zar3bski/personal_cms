@@ -112,14 +112,14 @@ class Category(models.Model):
 class Article_category(Category):
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['parent','name'], name='unique')
+            models.UniqueConstraint(fields=['parent','name'], name='articlecatunicity')
         ]
         verbose_name_plural = "article_categories"
 
 class Photo_category(Category):
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['parent','name'], name='unique')
+            models.UniqueConstraint(fields=['parent','name'], name='photocatunicity')
         ] 
         verbose_name_plural = "photo_categories"
     visible_as_gallery = models.BooleanField(default=True)
@@ -137,7 +137,7 @@ class Person(models.Model):
     class Meta:
         ordering = ['first_name']
         constraints = [
-            models.UniqueConstraint(fields=['first_name','last_name'], name='unique_person')
+            models.UniqueConstraint(fields=['first_name','last_name'], name='personunicity')
         ]
 
 class Post(models.Model): 
@@ -147,7 +147,7 @@ class Post(models.Model):
             models.Index(fields=['category', 'nb_views', 'rating'])
         ] 
         constraints = [
-            models.UniqueConstraint(fields=['title','author'], name='unique')
+            models.UniqueConstraint(fields=['title','author'], name='postunicity')
         ]
 
 
