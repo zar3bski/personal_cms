@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db.models import F
 from django.conf import settings
+from django.template.defaultfilters import slugify
 
 @receiver(post_save, sender=ExternalAccount)
 @receiver(post_delete, sender=ExternalAccount)
@@ -30,19 +31,24 @@ def override_css(sender, instance, **kwargs):
     with open(settings.STATIC_ROOT+'/website/css/custom.css', "w") as css:
         css.write(instance.code)
 
-@receiver(post_save, sender=Article)
-@receiver(post_save, sender=Photo)
-def add_one_to_count(sender, instance, **kwargs):
-    instance.category.count = F('count')+1
-    instance.category.save()
-    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all(),None)
+#@receiver(post_save, sender=Article)
+#@receiver(post_save, sender=Photo)
+#def add_one_to_count(sender, instance, **kwargs):
+#    instance.categories.count = F('count')+1
+#    #instance.categories.save()
+#    cache.set('{}_category'.format(sender.__name__), type(instance.categories).objects.all(),None)
 
-@receiver(post_delete, sender=Article)
-@receiver(post_delete, sender=Photo)
-def drop_one_to_count(sender, instance, **kwargs):
-    instance.category.count = F('count')-1
-    instance.category.save()    
-    cache.set('{}_category'.format(sender.__name__), type(instance.category).objects.all(),None)
+#@receiver(post_delete, sender=Article)
+#@receiver(post_delete, sender=Photo)
+#def drop_one_to_count(sender, instance, **kwargs):
+#    instance.categories.count = F('count')-1
+#    #instance.categories.save()    
+#    cache.set('{}_category'.format(sender.__name__), type(instance.categories).objects.all(),None)
+
+@receiver(pre_save, sender=Article)
+@receiver(pre_save, sender=Photo)
+def update_slug(sender, instance, **kwargs): 
+	instance.slug = slugify(instance.title)
 
 @receiver(post_save, sender=User)
 def add_new_user_to_persons(sender, instance, **kwargs): 

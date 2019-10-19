@@ -112,14 +112,14 @@ class Category(models.Model):
 class Article_category(Category):
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['parent','name'], name='unique')
+            models.UniqueConstraint(fields=['parent','name'], name='unique_article')
         ]
         verbose_name_plural = "article_categories"
 
 class Photo_category(Category):
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['parent','name'], name='unique')
+            models.UniqueConstraint(fields=['parent','name'], name='unique_photo')
         ] 
         verbose_name_plural = "photo_categories"
     visible_as_gallery = models.BooleanField(default=True)
@@ -144,15 +144,15 @@ class Post(models.Model):
     class Meta:
         abstract        = True
         indexes         = [
-            models.Index(fields=['category', 'nb_views', 'rating'])
+            models.Index(fields=['slug', 'nb_views', 'rating'])
         ] 
         constraints = [
-            models.UniqueConstraint(fields=['title','author'], name='unique')
+            models.UniqueConstraint(fields=['title'], name='unique_post')
         ]
 
-
     title           = models.CharField(max_length=100)
-    author          = models.ForeignKey(Person, null=True, on_delete=models.SET_NULL)
+    slug            = models.SlugField(blank=True, max_length=100)
+    author          = models.ForeignKey(Person, on_delete=models.PROTECT)
     rating          = models.PositiveSmallIntegerField(default=0, editable=False)
     nb_views        = models.PositiveIntegerField(default=0, editable=False)
     tags            = models.CharField(max_length=100, help_text="comma separated tags")
@@ -168,13 +168,12 @@ class Post(models.Model):
             pk  = randint(1, max_id)
             item = cls.objects.filter(pk=pk).first()
             if item:
-                if cat_list == None or item.category in cat_list: 
+                if cat_list == None or bool(set(item.categories.all()) & set(cat_list)): 
                     items.append(item)
         return items
 
-# TODO: categories should be many to many relations
 class Article(Post):
-    category        = models.ForeignKey(Article_category, null=True, on_delete=models.SET_NULL)
+    categories      = models.ManyToManyField(Article_category)
     last_update     = models.DateField('date published')
     visible         = models.BooleanField(default=True)
     content         = models.TextField(help_text="markdown syntax. You can enable syntax highlighting in your fenced code by adding the typical extention of the language (e.g. ```py for python syntax)")
@@ -184,9 +183,8 @@ class Article(Post):
     def __str__(self):
         return self.title
         
-# TODO: categories should be many to many relations
 class Photo(Post):
-    category     = models.ForeignKey(Photo_category, null=True, on_delete=models.SET_NULL)
+    categories   = models.ManyToManyField(Photo_category)
     photo_models = models.ManyToManyField(Person, related_name="models", blank=True)
     place_name   = models.CharField(max_length=100, null=True, blank=True)
     buy_link     = models.URLField(max_length=200, null=True, blank=True)

@@ -21,7 +21,7 @@ class TestCache(TestCase):
 		self.assertTrue(cache.get('Photo_category').get(pk=1).path=="landscape")
 		self.assertTrue(cache.get('Photo_category').get(pk=2).name=="Portrait")
 
-		self.assertTrue(cache.get('Article_category').count()==3)
+		self.assertTrue(cache.get('Article_category').count()==4)
 		self.assertTrue(cache.get('Article_category').get(pk=1).path=="code")
 		self.assertTrue(cache.get('Article_category').get(pk=1).parent==None)#
 		self.assertTrue(cache.get('Article_category').get(pk=2).name=="Python")
@@ -63,10 +63,11 @@ class TestBrowseArticles(TestCase):
 		v = setup_view(Browse(), request)
 		context = v._context_processor("code", "last_update", 1)
 
-		self.assertTrue(len(context["articles"])==2)
+		self.assertTrue(len(context["articles"])==3)
 		self.assertTrue(Article.objects.get(pk=1) in context["articles"])
 		self.assertTrue(Article.objects.get(pk=2) in context["articles"])
-		self.assertTrue(Article.objects.get(pk=3) not in context["articles"])	
+		self.assertTrue(Article.objects.get(pk=3) not in context["articles"])
+		self.assertTrue(Article.objects.get(pk=4) in context["articles"])	
 
 # TODO
 class TestHomeView(TestCase):
@@ -198,3 +199,16 @@ class TestPerson(TestCase):
 		'''the same url cannot occur twice'''
 		with self.assertRaises(IntegrityError):
 			Person.objects.create(first_name="Mister", last_name="Nobody", url="https://fr.wikipedia.org/wiki/Jack_the_Ripper").save()
+
+class TestArticleDisplay(TestCase): 
+	fixtures = ["article_categories.yaml", "article-1.yaml", "person-1.yaml"]
+
+	def test_access(self):
+		c = Client()
+		response = c.get("/read/circa-hos-dies-lollianus-primae-lanuginis-adulescens/")
+		self.assertEqual(response.status_code, 200)
+
+	def test_look_for_wrong_article_404(self): 
+		c = Client()
+		response = c.get("/read/circa-hos-dies-lollianus/")
+		self.assertEqual(response.status_code, 404)

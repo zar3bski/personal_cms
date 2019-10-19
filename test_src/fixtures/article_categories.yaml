@@ -16,3 +16,9 @@
     parent: NULL
     name: Travel
     path: travel
+- model: website.article_category
+  pk: 4
+  fields:
+    parent: NULL
+    name: DevOps
+    path: devops

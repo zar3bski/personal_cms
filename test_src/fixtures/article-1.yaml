@@ -1,7 +1,8 @@
 - model: website.article
   pk: 1
   fields:
-    category: 2
+    categories: 
+      - 2
     photo: article_photo/code.jpg
     title: Circa hos dies Lollianus primae lanuginis adulescens
     first_published: 2019-05-03
@@ -32,7 +33,8 @@
 - model: website.article
   pk: 2
   fields:
-    category: 2
+    categories: 
+      - 2
     photo: article_photo/python.png
     title: Alios autem dicere aiunt multo etiam inhumanius
     first_published: 2018-05-03
@@ -63,7 +65,8 @@
 - model: website.article
   pk: 3
   fields:
-    category: 3
+    categories: 
+      - 3
     photo: article_photo/travel.png
     title: Isdem diebus Apollinaris Domitiani
     first_published: 2017-05-03
@@ -75,3 +78,20 @@
       is igitur est difficilius satis facere, qui se Latina scripta dicunt contemnere. in quibus hoc primum est in quo admirer, cur in gravissimis rebus non delectet eos sermo patrius, cum idem fabellas Latinas ad verbum e Graecis expressas non inviti legant. quis enim tam inimicus paene nomini Romano est, qui Ennii Medeam aut Antiopam Pacuvii spernat aut reiciat, quod se isdem Euripidis fabulis delectari dicat, Latinas litteras oderit?
 
       Quare hoc quidem praeceptum, cuiuscumque est, ad tollendam amicitiam valet; illud potius praecipiendum fuit, ut eam diligentiam adhiberemus in amicitiis comparandis, ut ne quando amare inciperemus eum, quem aliquando odisse possemus. Quin etiam si minus felices in diligendo fuissemus, ferendum id Scipio potius quam inimicitiarum tempus cogitandum putabat.
+
+- model: website.article
+  pk: 4
+  fields:
+    categories:
+      - 2 
+      - 4
+    title: Article in two categories
+    first_published: 2017-05-03
+    last_update: 2017-06-06
+    language: en
+    author: 1
+    tags: travel, england
+    content: |
+      is igitur est difficilius satis facere, qui se Latina scripta est in quo admirer, cur in gravissimis rebus non delectet eos sermo patrius, cum idem fabellas Latinas ad verbum e Graecis expressas non inviti legant. quis enim tam inimicus paene nomini Romano est, qui Ennii Medeam aut Antiopam Pacuvii spernat aut reiciat, quod se isdem Euripidis fabulis delectari dicat, Latinas litteras oderit?
+
+      Quare hoc quidem praeceptum, cuiuscumque est, illud potius praecipiendum fuit, ut eam diligentiam adhiberemus in amicitiis comparandis, ut ne quando amare inciperemus eum, quem aliquando odisse possemus. Quin etiam si minus felices in diligendo fuissemus, ferendum id Scipio potius quam inimicitiarum tempus cogitandum putabat.
