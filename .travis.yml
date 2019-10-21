@@ -13,7 +13,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script: 
-  - docker-compose up --build
+  - travis_wait docker-compose up --build
 
 script: 
   - docker exec voluble_web_1 coverage run ./manage.py test website
