@@ -6,12 +6,11 @@ services:
     build: 
       context: ./cms_src
       dockerfile: Dockerfile
-    command: python /usr/src/cms/manage.py runserver 0.0.0.0:8000
     volumes:
       - ./cms_src/:/usr/src/cms/
       - ./test_src/:/usr/src/test/
-      - ./test_src/fixtures/:/usr/src/cms/website/fixtures/
-      - ./test_src/media/:/usr/src/cms/media/
+      - ./test_src/fixtures/:/fixtures/
+      - ./test_src/media/:/media/
     ports:
       - 8000:8000
     environment:
@@ -24,6 +23,7 @@ services:
       - SQL_HOST=db
       - SQL_PORT=3306
       - DATABASE=mariadb
+      - ENV=dev
     depends_on:
       - db
   db:

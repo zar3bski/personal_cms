@@ -8,6 +8,7 @@ WORKDIR /usr/src/cms
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV ENV prod
 
 # install mysqlclient
 RUN apk update \
@@ -19,7 +20,7 @@ RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN apk add libjpeg
 COPY ./Pipfile /usr/src/cms/Pipfile
-RUN pipenv install --skip-lock --system --dev
+RUN pipenv install --skip-lock --system 
 RUN apk del build-deps
 
 # copy entrypoint.sh
