@@ -1,0 +1,14 @@
+language: python
+
+services:
+  - docker
+
+before_install: 
+  - pip install docker-compose
+
+script: 
+  - docker-compose up -d
+  - docker exec voluble_web_1 coverage run ./manage.py test website
+  - docker exec  voluble_web_1 coverage report -m
+  - docker exec voluble_web_1 rm .coverage
+  
