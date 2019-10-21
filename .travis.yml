@@ -13,12 +13,11 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script: 
-  - docker-compose up -d
+  - docker-compose up --build
 
 script: 
-  - docker-compose up -d
   - docker exec voluble_web_1 coverage run ./manage.py test website
-  - docker exec  voluble_web_1 coverage report -m
+  - docker exec voluble_web_1 coverage report -m
   - docker exec voluble_web_1 rm .coverage
 
 after_script:
