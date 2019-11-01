@@ -12,10 +12,8 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 
-before_script: 
-  - travis_wait docker-compose up --build
-
 script: 
+  - docker-compose up --build
   - docker exec voluble_web_1 coverage run ./manage.py test website
   - docker exec voluble_web_1 coverage report -m
   - docker exec voluble_web_1 rm .coverage
