@@ -48,7 +48,9 @@
 			<span property="articleBody">{{article.content | markdown | safe}}</span>
 		</div>
 		<div class="column col-3">
+			{% if article.photo|length > 0 %}
 			<div class="hide-sm"><img src="{{ MEDIA_URL }}/{{article.photo}}" class="img-responsive" property="image"></div>
+			{% endif %}
 
 			<div class="panel">
 				<div class="p-centered">

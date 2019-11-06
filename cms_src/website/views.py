@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.template import loader
 from django.http import HttpResponse, Http404
@@ -51,7 +51,7 @@ class Browse(View):
         begin, end = (int(page)-1)*5,(int(page)-1)*5+5
 
         category_ids = cache.get('Article_category').filter(path__startswith=super_category.lower())
-        articles = Article.objects.filter(category__in=category_ids).order_by("-"+order_mode)[begin:end]
+        articles = Article.objects.filter(categories__in=category_ids).order_by("-"+order_mode)[begin:end]
 
         total_items = sum(c.count for c in category_ids)
         max_page = int(ceil(total_items / 5))
@@ -72,20 +72,20 @@ class Reader(View):
     template = loader.get_template("website/article.html")
     comment_form = CommentForm
 
-    def get(self, request, path, article_id): 
-        article          = Article.objects.get(id=article_id)
+    def get(self, request, slug): 
+        article          = get_object_or_404(Article, slug=slug)
         article.nb_views = F('nb_views')+1
         article.save()
         article.refresh_from_db()
 
-        article_root = cache.get('Article_category').filter(path__startswith=article.category.path.split("->")[0])
-        suggestions  = Article.get_random_instances(3,article_root)
+        article_root = cache.get('Article_category').filter(path__startswith="code")
+        suggestions  = Article.get_random_instances(3,article.categories.all())
         
-        comments     = Comment.objects.select_related('article').filter(article_id=article_id)
+        comments     = Comment.objects.select_related('article').filter(article_id=article.id)
         context      = {"article":article, "comment_form":self.comment_form, "comments":comments, "suggestions":suggestions}
         return HttpResponse(self.template.render(context, request))
 
-    def post(self, request, path, article_id): 
+    def post(self, request, slug): 
         comment = self.comment_form(request.POST)
         if comment.is_valid(): 
             comment.clean()
@@ -97,7 +97,7 @@ class Reader(View):
             c = Comment.objects.create(
                 author     = comment["author"].value(), 
                 content    = comment["content"].value(),
-                article_id = article_id, 
+                article_id = Article.objects.get(slug=slug).id, 
                 parent     = parent)
             c.save()
             return redirect(request.META['HTTP_REFERER'])
@@ -123,7 +123,7 @@ class Gallery(View):
             
             begin, end   = (int(page)-1)*item_range, (int(page)-1)*item_range + item_range
             category_ids = cache.get('Photo_category').filter(path__startswith=super_category.lower())
-            photos       = Photo.objects.select_related('category').filter(category__in=category_ids)[begin:end]
+            photos       = Photo.objects.prefetch_related('categories').filter(categories__in=category_ids)[begin:end]
             
             total_items  = sum(c.count for c in category_ids)
             max_page     = int(ceil(total_items / item_range))

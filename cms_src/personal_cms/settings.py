@@ -131,12 +131,13 @@ USE_TZ = True
 
 STATIC_URL = '/staticfiles/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = '/staticfiles' 
 
-MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT= '/media' 
 
 MEDIA_URL= "/media/"
 
+FIXTURE_DIRS = ['/fixtures']
 
 ADMIN_REORDER = (
     # Keep original label and models

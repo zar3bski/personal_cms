@@ -75,7 +75,7 @@
 							<img src="{% static 'website/img/globe.png' %}" height="16"><span property="inLanguage">{{a.language}}</span>
 							<img src="{% static 'website/img/thumb.png' %}" height="16">{{a.rating}}
 							<div class="text-right">
-								<a href="/read/{{a.category}}/{{a.id}}" lang="{{a.language}}" hreflang="{{a.language}}" rel="{{a.author}}">
+								<a href="/read/{{a.slug}}/" lang="{{a.language}}" hreflang="{{a.language}}" rel="{{a.author}}">
 									{% if a.language == "en" %}
 										continue reading
 									{% endif %}

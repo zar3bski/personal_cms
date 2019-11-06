@@ -1,5 +1,8 @@
 # Voluble
 
+![](https://img.shields.io/travis/zar3bski/voluble)
+
+
 **Volubile** is a simple yet modular *Content Managment System* designed so that you can focus on what's important: **the content**. Whether you want to use it as a blog, a professional web page or a gallery, with a few ticks in a single administration panel, you can switch from one mode to another without spending frustrating hours struggling with obscure and redondant options.
 
 ## Components
