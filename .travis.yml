@@ -14,9 +14,7 @@ before_install:
 
 script: 
   - docker-compose up -d --build
-  - travis_wait 240 sleep infinity &
-  - docker exec voluble_web_1 coverage run ./manage.py test website
-  - travis_wait 120 sleep infinity &
+  - travis_wait 240 sleep infinity & docker exec voluble_web_1 coverage run ./manage.py test website
   - docker exec voluble_web_1 coverage report -m
   - docker exec voluble_web_1 rm .coverage
 
